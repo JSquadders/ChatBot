@@ -3,10 +3,8 @@ export class Bot {
 		this._name = name;
 
 		// #TODO falta atribuir view e model de alguma forma
-		this._chatView = chatView;
 		this._chat = chat;
-		
-		this.messageInterval = 5000;
+		this.refreshInterval = 5000;
 		this.ready = true;
 	}
 
@@ -18,13 +16,19 @@ export class Bot {
 		this._name = value;
 	}
 	
-	getChat() {}
+	answer() {
+		// #TODO separa mensagens que lhe interessam
+		// #TODO retorna Promise fetch()
+	}
 
+	// boolean ou Promise
 	postMessage(msg) {
 		this._chatView.postMessage('```[' + this._name + ']``` ' + msg);
-	} // boolean ou Promise
+	}
 
+	// #TODO implementar mais tarde
+	// boolean ou Promise
 	postMessageToBot(bot, msg) {
 		this.postMessage('```[to:' + bot.name + ']```' + msg)
-	} // boolean ou Promise.
+	}
 }

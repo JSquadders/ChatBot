@@ -1,4 +1,5 @@
 export class Chat {
+	
 	constructor(title) {
 		this._title = title;
 		this._messages = []; // mensagens da mais recente para a mais antiga
@@ -16,11 +17,11 @@ export class Chat {
 		return [...this._messages];
 	}
 
-	addMessage(msg) {
-		return this._messages.unshift(msg);
+	addMessage(message) {
+		return this._messages.unshift(message);
 	}
 
-	setMessages(msgs) {
-		this._messages = msgs;
+	setMessages(messages) {
+		this._messages = messages;
 	}
 }

@@ -5,7 +5,6 @@ export class ChatView {
 		this._title = title;
 
 		// array com todas as mensagens da conversa
-		// Atenção com ordem das mensagens: a mais recente sempre está na posição 0
 	}
 
 	get title() {
@@ -16,11 +15,16 @@ export class ChatView {
 		this._title = value;
 	}
 
-	// #TODO talvez Promise
-	postMessage(msg) {
+	hasNewMessage() {
+		// #TODO qualquer mensagem nova que ainda não tenha sido consultada
 	}
 
-	// #TODO talvez Promise
+	postMessage(msg) {
+		// #TODO talvez Promise
+	}
+
 	getMessages() {
+		// #TODO talvez Promise
+		// #TODO Atenção com ordem das mensagens: a mais recente sempre está na posição 0
 	}
 }

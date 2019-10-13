@@ -1,17 +1,13 @@
 import {Chat} from './Chat';
+import {ChatMapView} from './ChatMapView';
+import {ChatMap} from './ChatMap';
+import {ChatMapController} from './ChatMapController';
 
-let chatMapView = new ChatMapView();
-chatMapView.set(ChatMapView.getAllChatsTitles().map(chatTitle => [chatTitle, new chatView(chatTitle)]));
-
-let chatMap = new ChatMap();
-
-// #TODO forEach retorna cada par do map, não cada item
-chatMapView.forEach(chatView => chatMap.set([chatView.title, new Chat(title)]));
-
-let chatMapController = new ChatMapController(chatMap, chatMapView)
+const chatMapView = new ChatMapView(ChatMapView.getAllChatsTitles().map(chatTitle => new chatView(chatTitle)));
+const chatMap = new ChatMap([...chatMapView].map(chatView => new Chat(chatView.title)));
+const chatMapController = new ChatMapController(chatMap, chatMapView);
 
 let bot1 = new Bot('botName');
-bot1.messageInterval = 5000;
+bot1.refreshInterval = 5000;
 
-// chatMapController['JSquad'].addBot(bot1);
-// chatMapController['JSquad'].removeBot(bot1);
+chatMapController['JSquad'].bots.set(bot1.name, bot1);
