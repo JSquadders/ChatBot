@@ -3,8 +3,7 @@ export class ChatView {
 	constructor(title) {
 		// Nome da conversa, do grupo ou da pessoa
 		this._title = title;
-
-		// array com todas as mensagens da conversa
+		this._hasNewMessage = false;
 	}
 
 	get title() {
@@ -16,15 +15,20 @@ export class ChatView {
 	}
 
 	hasNewMessage() {
-		// #TODO qualquer mensagem nova que ainda não tenha sido consultada
+		// #TODO implementar verificação
+		this._hasNewMessage = true;
+		return true;
 	}
 
 	postMessage(msg) {
-		// #TODO talvez Promise
+		document.querySelector('._3u328').textContent = msg;
+		document.querySelector('._3u328').dispatchEvent(new Event('input', {bubbles: true}));
+		document.querySelector('._3M-N-').click();
 	}
 
 	getMessages() {
-		// #TODO talvez Promise
-		// #TODO Atenção com ordem das mensagens: a mais recente sempre está na posição 0
+		// #TODO mensagem mais recente na posição 0
+		this._hasNewMessage = false;
+		return [...document.querySelectorAll('span.selectable-text span')];
 	}
 }

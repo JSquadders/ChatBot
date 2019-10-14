@@ -27,24 +27,14 @@ export class ChatMapController extends Map {
 			this.set(chat.title, new ChatController(chat, chatView));
 		})
 
-		setInterval(this.update.bind(this), this.refreshInterval)
+		setInterval(this.update.bind(this), this.refreshInterval);
 	}
 
 	update() {
 		this.forEach(([, chatController]) => {
-			if (chatController.hasNewMessage())
+			if (chatController.nBots && chatController.hasNewMessage())
 				chatController.update();
 		})
-	}
-	
-	addChat(chatController) {
-		// boolean
-	}
-
-	// #TODO método para remover chat
-
-	getChat(id) {
-		// ChatController ou null se não existir	
 	}
 
 	getUnansweredChatMap() {

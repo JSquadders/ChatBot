@@ -13,7 +13,7 @@ export class Chat {
 		this._title = value;
 	}
 
-	getMessages() {
+	get messages() {
 		return [...this._messages];
 	}
 

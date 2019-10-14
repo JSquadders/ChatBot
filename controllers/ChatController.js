@@ -1,5 +1,5 @@
-import {Chat} from './Chat';
-import {ChatView} from './ChatView';
+import {Chat} from '../models/Chat';
+import {ChatView} from '../views/ChatView';
 
 export class ChatController {
 	constructor(chat, chatView) {
@@ -8,8 +8,13 @@ export class ChatController {
 		this._bots = new Map();
 	}
 
-	get bots() {
-		return this._bots;
+	addBot(bot) {
+		bot.chatController = this;
+		this._bots.set(bot.name, bot);
+	}
+
+	nBots() {
+		return this._bots.size;
 	}
 
 	hasNewMessage() {
@@ -23,8 +28,10 @@ export class ChatController {
 			this._chat.setMessages(newMessages);
 			
 			// #TODO onde considerar o tempo de resposta dos bots?
-			for (const bot of this._bots.values())
+			for (const bot of this._bots.values()) {
+				if (bot.ready)
 				bot.answer();
+			}
 		}
 	}
 
@@ -32,7 +39,7 @@ export class ChatController {
 		this._chat.setMessages(messages);
 	}
 
-	getMessages(messages) {
+	getMessages() {
 		this._chat.getMessages();
 	}
 }
