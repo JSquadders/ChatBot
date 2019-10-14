@@ -8,13 +8,42 @@ export class ChatMapController extends Map {
 		super();
 		this._chatMap;
 		this._chatMapView;
-		this.refreshInterval = 10000;
+		this._intervalID;
+		this._refreshInterval;
 		this.init(chatMap, chatMapView);
+	}
+
+	listen() {
+		if (this._intervalID)
+			return false;
+
+		this._intervalID = setInterval(this.update.bind(this), this.refreshInterval);
+		return true;
+	}
+
+	pauseListening() {
+		if (this._intervalID)
+			clearInterval(this._intervalID);
+		this._intervalID = 0;
+	}
+
+	set refreshInterval(value = 5000) {
+		this._refreshInterval = value;
+		if (this._intervalID) {
+			clearInterval(this._intervalID);
+			this.listen();
+		}
+	}
+
+	get refreshInterval() {
+		return this._refreshInterval;
 	}
 	
 	init(chatMap, chatMapView) {
 		this._chatMap = chatMap;
 		this._chatMapView = chatMapView;
+		this._intervalID = 0;
+		this._refreshInterval = 5000;
 
 		if (this._chatMap.size != this._chatMapView.size)
 			throw new Error("Number of models and views doesn't match.");
@@ -26,22 +55,15 @@ export class ChatMapController extends Map {
 			
 			this.set(chat.title, new ChatController(chat, chatView));
 		})
-
-		setInterval(this.update.bind(this), this.refreshInterval);
 	}
 
 	update() {
-		this.forEach(([, chatController]) => {
-			if (chatController.nBots && chatController.hasNewMessage())
-				chatController.update();
-		})
-	}
-
-	getUnansweredChatMap() {
-		// ChatMapController com os chats que tiverem mensagens novas, ou null se não houver
-	}
-
-	getNextUnansweredChat() {
-		// qualquer ChatController com mensagem nova, ou null se não houver
+		// #TODO Promise
+		this.pauseListening();
+		let unansweredChat = this._chatMapView.getNextUnansweredChat();
+		if (unansweredChat) {
+			unansweredChat.getNewMessages().forEach(msg => this._chatMap[unansweredChat.title].addMessageToBeRead(msg));
+			this._chatMap[unansweredChat.title].reply();
+		}
 	}
 }

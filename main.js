@@ -7,7 +7,4 @@ const chatMapView = new ChatMapView(ChatMapView.getAllChatsTitles().map(chatTitl
 const chatMap = new ChatMap([...chatMapView].map(chatView => new Chat(chatView.title)));
 const chatMapController = new ChatMapController(chatMap, chatMapView);
 
-let bot1 = new Bot('botName');
-bot1.refreshInterval = 5000;
-
-chatMapController['JSquad'].addBot(bot1);
+chatMapController['JSquad'].addBot(new Bot('botName'));

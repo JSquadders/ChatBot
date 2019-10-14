@@ -1,9 +1,10 @@
-// #TODO considerar que uma mensagem pode ser apagada ou editada
 export class ChatView {
 	constructor(title) {
 		// Nome da conversa, do grupo ou da pessoa
 		this._title = title;
 		this._hasNewMessage = false;
+		this._checked = false;
+		this._newMessages = [];
 	}
 
 	get title() {
@@ -14,10 +15,19 @@ export class ChatView {
 		this._title = value;
 	}
 
+	checked() {
+		this._checked = true;
+		this._newMessages.length = 0;
+	}
+
 	hasNewMessage() {
-		// #TODO implementar verificação
+		// #TODO implementar
 		this._hasNewMessage = true;
 		return true;
+	}
+
+	getNewMessages() {
+		// #TODO mensagem mais recente na posição 0
 	}
 
 	postMessage(msg) {

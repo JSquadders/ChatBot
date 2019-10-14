@@ -4,6 +4,14 @@ export class ChatMapView extends Map {
 		super(chatViews.map(chatView => [chatView.title, chatView]));
 	}
 
+	getNextUnansweredChat() {
+		for (this.values() of chat) {
+			if (chat.hasNewMessage())
+				return chat;
+		}
+		return null;
+	}
+
 	static getAllChatsTitles() {
 	}
 }

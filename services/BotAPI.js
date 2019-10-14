@@ -19,7 +19,7 @@ export class BotAPI {
 		this._messages = [];
 	}
 
-	sendMessage(message) {
+	postMessage(message) {
 		// #TODO retorna Promise. then(response) retorna a resposta
 		
 		this._messages.unshift(message);
@@ -49,6 +49,6 @@ export class BotAPI {
 		xhr.send(stimulus + '&icognocheck=' + icognocheck);
 	}
 
-	getAnswer() {
+	getLastAnswer() {
 	}
 }

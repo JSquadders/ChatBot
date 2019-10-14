@@ -1,13 +1,13 @@
+import {BotAPI} from '../services/BotAPI';
+
 export class Bot {
 	constructor(name) {
 		this._name = name;
-		this._chatController;
-		this.refreshInterval = 5000;
-		this.ready = false;
-	}
-
-	set chatController(value) {
-		this._chatController = value;
+		this._messagesToBeRead = [];
+		this._messagesToBeSent = [];
+		this._read = true;
+		this._replied = true;
+		this._api = new BotAPI();
 	}
 
 	get name() {
@@ -15,14 +15,22 @@ export class Bot {
 	}
 
 	set name(value) {
-		this._name = value;
+		return this._name = value;
+	}
+
+	addMessageToBeRead(msg) {
+		this._read = false;
+		return this._messagesToBeRead.unshift(msg);
 	}
 	
-	answer() {
-		// #TODO separa mensagens que lhe interessam
-		// #TODO retorna Promise fetch()
+	addMessageToBeSent(msg) {
+		this._sent = false;
+		return this._messagesToBeSent.unshift(msg);
+	}
 
-		// #TODO muito confuso modo de acessar mensagens, que estão replicadas em vários lugares
+	reply() {
+		// #TODO retorna Promise fetch()
+		// #TODO fazer this._newMessages.length = 0 após resposta
 		this._chatController.chat.messages.forEach(msg => {
 			if (/\[bot:reset\]/.test(msgSpan.textContent)) {
 				msgBuffer = [];
@@ -36,6 +44,8 @@ export class Bot {
 					msgBuffer.unshift(msg);
 				}
 			}
+			this._api.postMessage('blabla');
+			// this.addMessageToBeSent()
 		})
 	}
 
