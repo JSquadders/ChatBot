@@ -30,23 +30,10 @@ export class Bot {
 
 	reply() {
 		// #TODO retorna Promise fetch()
-		// #TODO fazer this._newMessages.length = 0 após resposta
-		this._chatController.chat.messages.forEach(msg => {
-			if (/\[bot:reset\]/.test(msgSpan.textContent)) {
-				msgBuffer = [];
-			} else if (/\bBOT\b/i.test(msgSpan.textContent) && !/\[bot:listening\]|\[bot:stop\]/.test(msgSpan.textContent)) {
-				let msg = msgSpan.textContent.replace(/[^a-z|\d|\u00E0-\u00FC]*\bBOT\b[^a-z|\d|\u00E0-\u00FC]*/i, '');
-				if (!msg.length)
-					msg = arr[index - 1].textContent.replace(/[^a-z|\d|\u00E0-\u00FC]*\bBOT\b[^a-z|\d|\u00E0-\u00FC]*/i, '');
-				if (msg.length) {
-					if (/[a-z|\d]\s*$/i.test(msg))
-						msg += '.';
-					msgBuffer.unshift(msg);
-				}
-			}
-			this._api.postMessage('blabla');
-			// this.addMessageToBeSent()
-		})
+		// #TODO fazer this._messagesToBeRead.length = 0 após resposta
+		this._api.postMessage('blabla');
+		// this.addMessageToBeSent()
+		
 	}
 
 	// boolean ou Promise

@@ -21,7 +21,7 @@ export class ChatView {
 	}
 
 	hasNewMessage() {
-		// #TODO implementar
+		document.querySelectorAll('.P6z4j._1W1Se'); // #TODO retorna os que têm bolinha verde de alerta
 		this._hasNewMessage = true;
 		return true;
 	}

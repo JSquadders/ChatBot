@@ -13,5 +13,6 @@ export class ChatMapView extends Map {
 	}
 
 	static getAllChatsTitles() {
+		return [...document.querySelectorAll('._19RFN')].map(span => span.title);
 	}
 }
