@@ -1,6 +1,6 @@
-import {BotAPI} from '../services/BotAPI';
+// import {BotAPI} from '../services/BotAPI';
 
-export class Bot {
+/*export*/ class Bot {
 	constructor(name) {
 		this._name = name;
 		this._messagesToBeRead = [];
@@ -31,7 +31,8 @@ export class Bot {
 	reply() {
 		// #TODO retorna Promise fetch()
 		// #TODO fazer this._messagesToBeRead.length = 0 após resposta
-		this._api.postMessage('blabla');
+		// #TODO confirmar se é this._messagesToBeRead[0] mesmo, e se sempre será só 1 mensagem
+		this._api.postMessage(this._messagesToBeRead[0]);
 		// this.addMessageToBeSent()
 		
 	}

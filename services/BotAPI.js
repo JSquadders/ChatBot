@@ -1,6 +1,6 @@
-import {Cryptography} from '../helpers/Cryptography';
+// import {Cryptography} from '../helpers/Cryptography';
 
-export class BotAPI {
+/*export*/ class BotAPI {
 	
 	constructor() {
 		this._sessionID;
@@ -24,9 +24,6 @@ export class BotAPI {
 		
 		this._messages.unshift(message);
 
-		console.log('sendMessage()');
-		console.log('_messages', this._messages);
-		
 		let icognocheck = '';
 		xhr.open('POST', 'https://www.' + 'c' + 'l' + 'ev' + 'er' + 'bot.com/' + 'webservice' + 'min?uc=UseOfficial' + 'C' + 'l' + 'e' + 'ver' + 'bot' + 'API'
 			+ `&out=${!!this._messages[1] ? Cryptography.messageEncode(this._messages[1]) : ''}&in=${Cryptography.messageEncode(this._messages[0])}&bot=c&cbsid=${this._sessionID}&xai=WXH,${this._XAI}&ns=${this._ns++}&al=&dl=${this.language}&flag=&user=&mode=1&alt=0&reac=&emo=&sou=website&xed=&`); // t=32511&'); #TODO

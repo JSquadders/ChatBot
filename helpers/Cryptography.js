@@ -1,6 +1,6 @@
 const _g = '0123456789abcdef'.split('');
 
-export class Cryptography {	
+/*export*/ class Cryptography {	
 	static _f(p) {
 		let o = '', m = 0;
 		for (; m < 4; m++) {

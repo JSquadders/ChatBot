@@ -1,4 +1,4 @@
-export class Chat {
+/*export*/ class Chat {
 	
 	constructor(title) {
 		this._title = title;

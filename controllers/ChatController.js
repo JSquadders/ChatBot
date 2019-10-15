@@ -1,7 +1,7 @@
-import {Chat} from '../models/Chat';
-import {ChatView} from '../views/ChatView';
+// import {Chat} from '../models/Chat';
+// import {ChatView} from '../views/ChatView';
 
-export class ChatController {
+/*export*/ class ChatController {
 	constructor(chat, chatView) {
 		this._chat = chat;
 		this._chatView = chatView;

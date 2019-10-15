@@ -1,4 +1,4 @@
-export class ChatView {
+/*export*/ class ChatView {
 	constructor(title) {
 		// Nome da conversa, do grupo ou da pessoa
 		this._title = title;
@@ -28,9 +28,12 @@ export class ChatView {
 
 	getNewMessages() {
 		// #TODO mensagem mais recente na posição 0
+		// #TODO apagar teste abaixo
+		return ['TESTE'];
 	}
 
 	postMessage(msg) {
+		// #TODO mover para a conversa certa e depois rodar o código abaixo
 		document.querySelector('._3u328').textContent = msg;
 		document.querySelector('._3u328').dispatchEvent(new Event('input', {bubbles: true}));
 		document.querySelector('._3M-N-').click();
