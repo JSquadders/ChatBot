@@ -1,10 +1,38 @@
 /*export*/ class ChatView {
+
 	constructor(title) {
+		
 		// Nome da conversa, do grupo ou da pessoa
 		this._title = title;
 		this._hasNewMessage = false;
 		this._checked = false;
 		this._newMessages = [];
+	}
+
+	querySelector(selector, rootElement = document) {
+		return new Promise((resolve, reject) => {
+			let intervalID = setInterval(() => {
+				let element;
+				if (element = rootElement.querySelector(selector)) {
+					clearInterval(intervalID);
+					resolve(element);
+				}
+			},
+			100);
+		});
+	}
+
+	querySelectorAll(selector, rootElement = document) {
+		return new Promise((resolve, reject) => {
+			let intervalID = setInterval(() => {
+				let elements;
+				if (elements = rootElement.querySelectorAll(selector)) {
+					clearInterval(intervalID);
+					resolve(elements);
+				}
+			},
+			100);
+		});
 	}
 
 	get title() {
@@ -21,15 +49,23 @@
 	}
 
 	hasNewMessage() {
-		document.querySelectorAll('.P6z4j._1W1Se'); // #TODO retorna os que têm bolinha verde de alerta
+ 		// #TODO true somente se a conversa tiver bolinha verde
+		return !!document.querySelector('.P6z4j._1W1Se[title="' + this._title + '"]');
+
+		document.querySelector('._2UaNq._2ko65').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window})); // #TODO retorna as conversas (para clicar em cima) que tiverem bolinha verde de alerta
+		document.querySelectorAll('.P6z4j._1W1Se'); // #TODO retorna as conversas que tiverem bolinha verde de alerta
 		this._hasNewMessage = true;
+		
+		// #TODO arrumar
 		return true;
 	}
 
 	getNewMessages() {
-		// #TODO mensagem mais recente na posição 0
-		// #TODO apagar teste abaixo
-		return ['TESTE'];
+		document.querySelector('span._19RFN[title="' + this._title + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+		// #TODO retorna todas abaixo do Unread Messages
+		this._newMessages = [...document.querySelectorAll('._3Xx0y ~ div.message-in span.selectable-text span')].reverse();
+		
+		return this._newMessages;
 	}
 
 	postMessage(msg) {
@@ -42,6 +78,6 @@
 	getMessages() {
 		// #TODO mensagem mais recente na posição 0
 		this._hasNewMessage = false;
-		return [...document.querySelectorAll('span.selectable-text span')];
+		return [...document.querySelectorAll('div.message-in span.selectable-text span')].reverse();
 	}
 }

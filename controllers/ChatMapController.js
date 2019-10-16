@@ -63,7 +63,9 @@
 		let unansweredChat = this._chatMapView.getNextUnansweredChat();
 		if (unansweredChat) {
 			unansweredChat.getNewMessages().forEach(msg => this._chatMap.get(unansweredChat.title).addMessageToBeRead(msg));
-			this._chatMap.get(unansweredChat.title).reply();
+			this._chatMap.get(unansweredChat.title).reply()
+				.then(unansweredChat.postMessage.bind(unansweredChat))
+				.catch(console.log);
 		}
 	}
 }

@@ -14,7 +14,7 @@ const _g = '0123456789abcdef'.split('');
 	}
 	
 	static _j(u, o, n, m, r, p) {
-		o = this._d(_d(o, u), _d(m, p));
+		o = this._d(this._d(o, u), this._d(m, p));
 		return this._d((o << r) | (o >>> (32 - r)), n)
 	}
 	
@@ -31,7 +31,7 @@ const _g = '0123456789abcdef'.split('');
 	}
 	
 	static _a(o, n, u, r, m, q, p) {
-		return _j((n & u) | ((~n) & r), o, n, m, q, p)
+		return this._j((n & u) | ((~n) & r), o, n, m, q, p)
 	}
 	
 	static _c(n, p) {
@@ -103,7 +103,7 @@ const _g = '0123456789abcdef'.split('');
 		n[0] = this._d(o, n[0]);
 		n[1] = this._d(m, n[1]);
 		n[2] = this._d(r, n[2]);
-		n[3] = _d(q, n[3])
+		n[3] = this._d(q, n[3])
 	}
 	
 	static _i(p) {
@@ -141,7 +141,7 @@ const _g = '0123456789abcdef'.split('');
 	}
 
 	static messageEncode(msg) {
-		let msgEncoded = sBuffer = '';
+		let msgEncoded = '', sBuffer = '';
 		for (let i = 0; i <= msg.length; i++) {
 			if (msg.charCodeAt(i) > 255) {
 				sBuffer = escape(msg.charAt(i));
