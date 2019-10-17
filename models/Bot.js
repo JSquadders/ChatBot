@@ -25,8 +25,7 @@
 	
 	addMessageToBeSent(msg) {
 		this._sent = false;
-		this._messagesToBeSent.unshift('```[' + this.name + ']``` ' + msg);
-		return this._messagesToBeSent[0];
+		return this._messagesToBeSent.unshift('```[' + this.name + ']``` ' + msg);
 	}
 
 	reply() {
@@ -35,8 +34,10 @@
 		// #TODO confirmar se é this._messagesToBeRead[0] mesmo, e se sempre será só 1 mensagem
 		return new Promise((resolve, reject) => {
 			this._api.postMessage(this._messagesToBeRead[0])
-				.then(this.addMessageToBeSent.bind(this))
-				.then(resolve);
+				.then(answer => {
+					this.addMessageToBeSent(answer);
+					resolve(answer);
+				});
 		})
 	}
 

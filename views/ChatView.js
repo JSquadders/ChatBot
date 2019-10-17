@@ -12,8 +12,8 @@
 	querySelector(selector, rootElement = document) {
 		return new Promise((resolve, reject) => {
 			let intervalID = setInterval(() => {
-				let element;
-				if (element = rootElement.querySelector(selector)) {
+				let element = rootElement.querySelector(selector);
+				if (element) {
 					clearInterval(intervalID);
 					resolve(element);
 				}
@@ -25,8 +25,8 @@
 	querySelectorAll(selector, rootElement = document) {
 		return new Promise((resolve, reject) => {
 			let intervalID = setInterval(() => {
-				let elements;
-				if (elements = rootElement.querySelectorAll(selector)) {
+				let elements = rootElement.querySelectorAll(selector);
+				if (elements.length > 1) {
 					clearInterval(intervalID);
 					resolve(elements);
 				}
@@ -61,11 +61,12 @@
 	}
 
 	getNewMessages() {
-		document.querySelector('span._19RFN[title="' + this._title + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		// #TODO retorna todas abaixo do Unread Messages
-		this._newMessages = [...document.querySelectorAll('._3Xx0y ~ div.message-in span.selectable-text span')].reverse();
-		
-		return this._newMessages;
+		return new Promise((resolve, reject) => {
+			document.querySelector('span._19RFN[title="' + this._title + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+			
+			// #TODO retorna todas abaixo do Unread Messages
+			this._newMessages = this.querySelectorAll(/*'._3Xx0y ~*/ 'div.message-in span.selectable-text span').then(elements => resolve([...elements].reverse()));
+		});
 	}
 
 	postMessage(msg) {

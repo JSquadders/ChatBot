@@ -35,13 +35,12 @@
 
 	addMessageToBeRead(message) {
 		this._messagesToBeRead.unshift(message);
-		this._messages.unshift(message);
+		return this._messages.unshift(message);
 	}
 
 	addMessageToBeSent(message) {
 		this._messagesToBeSent.unshift(message);
-		this._messages.unshift(message);
-		return this._messagesToBeSent[0];
+		return this._messages.unshift(message);
 	}
 
 	reply() {
@@ -64,8 +63,10 @@
 					}
 				})
 				bot.reply()
-					.then(this.addMessageToBeSent.bind(this))
-					.then(resolve);
+					.then(answer => {
+						this.addMessageToBeSent(answer);
+						resolve(answer);
+					});
 			}
 
 			// if (/\bBOT\b/i.test(message) && !/\[bot:listening\]|\[bot:stop\]/.test(message)) {
