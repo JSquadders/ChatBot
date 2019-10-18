@@ -1,11 +1,13 @@
 /*export*/ class Chat {
 	
-	constructor(title) {
-		this._title = title;
+	constructor(id) {
+		this._id = id;
 		this._messages = []; // mensagens da mais recente para a mais antiga
 		this._messagesToBeRead = []; // mensagens da mais recente para a mais antiga
 		this._messagesToBeSent = [];
 		this._bots = new Map();
+		
+		// #TODO talvez não exista mais, já que a View não tem mais. A mesma lógica poderá ser aplicada aqui se possível
 		this._checked = false;
 	}
 	
@@ -18,22 +20,22 @@
 	}
 
 	get checked() {
-		return this._checked;
+		return this.checked;
 	}
 
-	// #TODO revisar se será privado mesmo ou se sequer existirá
-	_checked() {
+	// #TODO revisar se existirá
+	checked() {
 		this._messagesToBeRead.length = 0;
 		this._messagesToBeSent.length = 0;
-		return this._checked = true;
+		return this.checked = true;
 	}
 
-	get title() {
-		return this._title;
+	get id() {
+		return this._id;
 	}
 
-	set title(value) {
-		this._title = value;
+	set id(value) {
+		this._id = value;
 	}
 
 	get messages() {

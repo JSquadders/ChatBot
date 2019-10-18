@@ -1,5 +1,5 @@
 /*export*/ class ChatMap extends Map {
 	constructor(...chats) {
-		super(chats.map(chat => [chat.title, chat]));
+		super(chats.map(chat => [chat.id, chat]));
 	}
 }
