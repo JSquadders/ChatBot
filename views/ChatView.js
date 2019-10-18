@@ -42,13 +42,13 @@
 	}
 
 	checked() {
-		this._checked = true;
 		this._newMessages.length = 0;
+		return this._checked = true;
 	}
 
 	hasNewMessage() {
 		// #TODO funcionando para bolinha verde. Ainda é incerto se funciona quando é recebida uma mensagem na conversa atual
-		return this._hasNewMessage = !!document.querySelector('span._19RFN[title="+55 11 99814-9449"]')
+		return this._hasNewMessage = !!document.querySelector('span._19RFN[title="' + this._title + '"]')
 			.parentNode.parentNode.parentNode.querySelector('span.P6z4j._1W1Se');
 	}
 
@@ -57,7 +57,7 @@
 			document.querySelector('span._19RFN[title="' + this._title + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 			
 			// #TODO retorna todas as mensagens abaixo do "Unread Messages"
-			this._newMessages = this.querySelectorAll('._3Xx0y ~ div.message-in span.selectable-text span').then(elements => resolve([...elements].reverse()));
+			this._newMessages = this.querySelectorAll('._3Xx0y ~ span.selectable-text span').then(spans => resolve([...spans].map(span => span.textContent)));
 		});
 	}
 
@@ -71,6 +71,6 @@
 
 	async getMessages() {
 		document.querySelector('span._19RFN[title="' + this._title + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		return [...await this.querySelectorAll('div.message-in span.selectable-text span')].reverse();
+		return [...await this.querySelectorAll('span.selectable-text span')].reverse();
 	}
 }

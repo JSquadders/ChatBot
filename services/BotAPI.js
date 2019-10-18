@@ -42,7 +42,6 @@
 			icognocheck = Cryptography.md5(stimulus.substring(7, 33));
 			
 			console.log(stimulus);
-			
 			xhr.send(stimulus + '&icognocheck=' + icognocheck);
 		})
 	}

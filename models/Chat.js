@@ -21,6 +21,13 @@
 		return this._checked;
 	}
 
+	// #TODO revisar se será privado mesmo ou se sequer existirá
+	_checked() {
+		this._messagesToBeRead.length = 0;
+		this._messagesToBeSent.length = 0;
+		return this._checked = true;
+	}
+
 	get title() {
 		return this._title;
 	}
@@ -51,9 +58,10 @@
 			
 			for (let bot of this._bots.values()) {
 				this._messagesToBeRead.forEach(receivedMessage => {
+					console.log(receivedMessage);
 					let receivedMessageTreated = '';
 					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMessage)) {
-						receivedMessageTreated += receivedMessage.replace(new RegExp(`[^a-z|\d|\u00E0-\u00FC]*\b${bot.name}\b[^a-z|\d|\u00E0-\u00FC]*`, 'i'));
+						receivedMessageTreated = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b[^a-z|\\d|\\u00E0-\\u00FC]*`, 'i'), '');
 						if (/[a-z|\d]\s*$/i.test(receivedMessageTreated))
 							receivedMessageTreated += '.';
 					}

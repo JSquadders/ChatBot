@@ -57,12 +57,12 @@
 		return this._refreshInterval;
 	}
 
-	update() {
-		// #TODO Promise
+	async update() {
 		this.pauseListening();
 		let unansweredChat = this._chatMapView.getNextUnansweredChat();
 		if (unansweredChat) {
-			unansweredChat.getNewMessages().forEach(msg => this._chatMap.get(unansweredChat.title).addMessageToBeRead(msg));
+			let newMessages = await unansweredChat.getNewMessages();
+			newMessages.forEach(msg => this._chatMap.get(unansweredChat.title).addMessageToBeRead(msg));
 			this._chatMap.get(unansweredChat.title).reply()
 				.then(unansweredChat.postMessage.bind(unansweredChat))
 				.catch(console.log);

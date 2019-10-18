@@ -36,7 +36,9 @@
 			this._api.postMessage(this._messagesToBeRead[0])
 				.then(answer => {
 					this.addMessageToBeSent(answer);
-					resolve(answer);
+
+					// #TODO checar se será sempre só índice 0
+					resolve(this._messagesToBeSent[0]);
 				});
 		})
 	}
