@@ -23,9 +23,9 @@
 			throw new Error("Number of models and views doesn't match.");
 		
 		this._chatMap.forEach(chat => {
-			const chatView = this._chatMapView.get(chat.id);
+			let chatView = this._chatMapView.get(chat.id);
 			if (!chatView)
-				throw new Error(`There is no chat view called "${chat.id}"`);
+				throw new Error(`There is no chatview called "${chat.id}"`);
 			
 			this.set(chat.id, new ChatController(chat, chatView));
 		})
@@ -59,15 +59,18 @@
 
 	async update() {
 		this.pauseListening();
-		let unansweredChat = await this._chatMapView.getNextUnansweredChat();
-		if (unansweredChat) {
-			let newMessages = await unansweredChat.getNewMessages();
+		let unansweredChatView = await this._chatMapView.getNextUnansweredChat();
+		if (unansweredChatView) {
+			let newMessages = await unansweredChatView.popNewMessages();
 
 			// #TODO guardar this._chatMap.get(unansweredChat.id) numa variavel
+			let unansweredChat = this._chatMap.get(unansweredChatView.id);
 			console.log(newMessages);
-			newMessages.forEach(message => this._chatMap.get(unansweredChat.id).addMessageToBeRead(message.text));
-			this._chatMap.get(unansweredChat.id).reply()
-				.then(unansweredChat.postMessage.bind(unansweredChat))
+			newMessages.forEach(message => unansweredChat.addMessageToBeRead(message.text));
+			
+			// usar await para facilitar
+			unansweredChat.reply()
+				.then(() => unansweredChat.popMessagesToBeSent().forEach(message => unansweredChatView.postMessage(message)))
 				.catch(console.log);
 		}
 	}

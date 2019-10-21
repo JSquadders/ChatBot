@@ -11,24 +11,17 @@
 		return await this._chatView.hasNewMessage();
 	}
 
-	// #TODO aparentemente não está mais em uso
+	// #TODO não está em uso, mas talvez devesse estar
 	update() {
-		const newMessages = this._chatView.getMessages();
-		const currentMessages = this._chat.getMessages();
-		if (newMessages[0] != currentMessages[0] && newMessages[1] != currentMessages[1]) {
-			this._chat.setMessages(newMessages);
-		}
 	}
 
-	setMessages(messages) {
-		this._chat.setMessages(messages);
+	messages() {
+		this._chat.messages();
 	}
 
-	getMessages() {
-		this._chat.getMessages();
-	}
-
-	addBot(bot) {
+	async addBot(bot) {
 		this._chat.addBot(bot);
+		await this._chatView.postMessage('```[' + bot.name + ':reset]```');
+		await this._chatView.postMessage('```[' + bot.name + ':listening]```');
 	}
 }

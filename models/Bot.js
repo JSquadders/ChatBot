@@ -3,10 +3,10 @@
 /*export*/ class Bot {
 	constructor(name) {
 		this._name = name;
+
+		// estes 2 arrays não precisariam ser arrays, apenas string. Estão sendo mantidos como array para facilitar caso futuramente seja alterado o comportamento do bot
 		this._messagesToBeRead = [];
 		this._messagesToBeSent = [];
-		this._read = true;
-		this._replied = true;
 		this._api = new BotAPI();
 	}
 
@@ -19,7 +19,6 @@
 	}
 
 	addMessageToBeRead(msg) {
-		this._read = false;
 		return this._messagesToBeRead.push(msg);
 	}
 	
@@ -28,35 +27,38 @@
 		return this._messagesToBeSent.push('```[' + this.name + ']``` ' + msg);
 	}
 
+	clearMessagesToBeSent() {
+		this._messagesToBeSent.length = 0;
+	}
+
+	clearMessagesToBeRead() {
+		this._messagesToBeRead.length = 0;
+	}
+
 	reply() {
-		// #TODO fazer this._messagesToBeRead.length = 0 após resposta
 		return new Promise((resolve, reject) => {
-
 			if (!this._messagesToBeRead.length)
-				resolve('');
+				resolve();
 
-			// atualmente está sempre pegando só a última mensagem
+			// pega somente a última mensagem
 			this._api.postMessage(this._messagesToBeRead[this._messagesToBeRead.length - 1])
 				.then(answer => {
 					this.addMessageToBeSent(answer);
-					// this._messagesToBeRead.pop();
-					this._messagesToBeRead[this._messagesToBeRead.length - 1];
-					// resolve(this._messagesToBeSent.pop());
-					resolve(this._messagesToBeSent[this._messagesToBeSent.length - 1]);
+					this._messagesToBeRead.length = 0;
+					resolve();
 				});
 		})
 	}
 
-	// Promise
-	postMessage(msg) {
-
-		// #TODO não existe this._chatView
-		this._chatView.postMessage('```[' + this._name + ']``` ' + msg);
+	getAnswer() {
+		let answers = [...this._messagesToBeSent];
+		this._messagesToBeSent.length = 0;
+		return (answers.length ? answers[answers.length - 1] : '');
 	}
 
 	// #TODO implementar mais tarde
 	// Promise
 	postMessageToBot(bot, msg) {
-		this.postMessage('```[to:' + bot.name + ']```' + msg)
+		// this.postMessage('```[to:' + bot.name + ']```' + msg)
 	}
 }
