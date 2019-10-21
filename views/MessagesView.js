@@ -1,9 +1,10 @@
 // import {MessageView} from './MessageView';
 
 /*export*/ class MessagesView extends Array {
-	constructor(...args) {
-		super(...args);
-		this.lastChecked;
+	constructor(...messageViews) {
+		super();
+		this.lastChecked = 0;
+		messageViews.forEach(messageView => this.push(messageView));
 	}
 
 	push(messageView) {
@@ -13,5 +14,17 @@
 			return super.push(messageView);
 		}
 		return false;
+	}
+
+	last() {
+		this[this.length - 1];
+	}
+
+	oldestToNewest() {
+		return [...this];
+	}
+
+	newestToOldest() {
+		return this.reverse();
 	}
 }

@@ -5,11 +5,9 @@
 
 	constructor(id) {
 		
-		// Nome da conversa, do grupo ou da pessoa
+		// Pode ser o nome da conversa, do grupo ou da pessoa
 		this._id = id;
-		this._hasNewMessage = false;
-		this._newMessages = [];
-		this._messages = new MessagesView();
+		this._messagesView = new MessagesView();
 	}
 
 	querySelector(selector, fulfillmentCallback = (element, timeElapsed) => (element || timeElapsed > 3000), rootElement = document) {
@@ -44,31 +42,21 @@
 		return this._id;
 	}
 
-	async hasNewMessage() {
-		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		let messages = await this.getMessages();
-		let [smallerArray, largerArray] = (this._messages.length < messages.length ? [this._messages, messages] : [messages, this._messages]);
-
-		// #TODO ainda não está considerando mensagens apagadas
-		// #TODO está errado. Está apenas comparando o menor array com o maior e retornando true em caso positivo. Isso não significa que há mensagens novas
-		return smallerArray.every((messageView, index) => (messageView.text == largerArray[index].text && messageView.sender == largerArray[index].sender));
-
-		// #TODO funcionando para bolinha verde. Ainda é incerto se funciona quando é recebida uma mensagem na conversa atual
-		// #TODO provavelmente não será mais utilizado
-		return this._hasNewMessage = !!document.querySelector('span._19RFN[title="' + this._id + '"]')
-			.parentNode.parentNode.parentNode.querySelector('span.P6z4j._1W1Se');
+	hasNewMessage() {
+		return new Promise(async (resolve, reject) => {
+			let oldMessagesJSON = this._messagesView.map(messageView => JSON.stringify(messageView));
+			resolve(!!(await this.getMessages()).filter(messageView => (messageView.datetime >= this._messagesView.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageView)))).length);
+		});
 	}
 
 	// #TODO checar se não dá problema conforme o scroll avança, já que as mensagens antigas são destruídas na renderização do React
 	getNewMessages() {
 		return new Promise(async (resolve, reject) => {
-			let oldMessagesJSON = this._messages.reverse().map(messageView => JSON.stringify(messageView));
-			console.log('oldMessagesJSON', oldMessagesJSON);
-			let newMessages = await this.getMessages();
-			newMessages = newMessages.reverse();
-			newMessages = newMessages.filter(messageView => (messageView.datetime >= this._messages.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageView)))).reverse();
-			console.log('filtered newMessages', newMessages);
-			newMessages.forEach(newMessage => this._messages.push(newMessage));
+			let oldMessagesJSON = this._messagesView.map(messageView => JSON.stringify(messageView));
+			// console.log('oldMessagesJSON', oldMessagesJSON);
+			let newMessages = (await this.getMessages()).filter(messageView => (messageView.datetime >= this._messagesView.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageView))));
+			// console.log('filtered newMessages', newMessages);
+			newMessages.forEach(newMessage => this._messagesView.push(newMessage));
 			resolve(newMessages);
 		});
 	}
@@ -81,10 +69,10 @@
 		document.querySelector('._3M-N-').click(); // Checar se não haverá problema de sincronia
 	}
 
-	// #TODO filtrar mensagens excluídas
 	async getMessages() {
 		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		// let messageDivs = [...await this.querySelectorAll('span.selectable-text span')].reverse();
-		return new MessagesView(...[...await this.querySelectorAll('.-N6Gq')].reverse().map(messageDiv => new MessageView(messageDiv)));
+
+		// #TODO dar um tempo mínimo de espera neste querySelector pois demora um pouco até carregar TODAS as mensagens
+		return new MessagesView(...[...await this.querySelectorAll('div[data-pre-plain-text]')].map(messageDiv => new MessageView(messageDiv.parentNode)));
 	}
 }

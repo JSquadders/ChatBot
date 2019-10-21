@@ -23,11 +23,11 @@
 			throw new Error("Number of models and views doesn't match.");
 		
 		this._chatMap.forEach(chat => {
-			const chatView = this._chatMapView.get(chat.title);
+			const chatView = this._chatMapView.get(chat.id);
 			if (!chatView)
-				throw new Error(`There is no chat view called "${chat.title}"`);
+				throw new Error(`There is no chat view called "${chat.id}"`);
 			
-			this.set(chat.title, new ChatController(chat, chatView));
+			this.set(chat.id, new ChatController(chat, chatView));
 		})
 	}
 
@@ -59,11 +59,14 @@
 
 	async update() {
 		this.pauseListening();
-		let unansweredChat = this._chatMapView.getNextUnansweredChat();
+		let unansweredChat = await this._chatMapView.getNextUnansweredChat();
 		if (unansweredChat) {
 			let newMessages = await unansweredChat.getNewMessages();
-			newMessages.forEach(msg => this._chatMap.get(unansweredChat.title).addMessageToBeRead(msg));
-			this._chatMap.get(unansweredChat.title).reply()
+
+			// #TODO guardar this._chatMap.get(unansweredChat.id) numa variavel
+			console.log(newMessages);
+			newMessages.forEach(message => this._chatMap.get(unansweredChat.id).addMessageToBeRead(message.text));
+			this._chatMap.get(unansweredChat.id).reply()
 				.then(unansweredChat.postMessage.bind(unansweredChat))
 				.catch(console.log);
 		}

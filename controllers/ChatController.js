@@ -7,10 +7,11 @@
 		this._chatView = chatView;
 	}
 
-	hasNewMessage() {
-		return this._chatView.hasNewMessage();
+	async hasNewMessage() {
+		return await this._chatView.hasNewMessage();
 	}
 
+	// #TODO aparentemente não está mais em uso
 	update() {
 		const newMessages = this._chatView.getMessages();
 		const currentMessages = this._chat.getMessages();

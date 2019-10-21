@@ -2,8 +2,8 @@
 	
 	constructor(id) {
 		this._id = id;
-		this._messages = []; // mensagens da mais recente para a mais antiga
-		this._messagesToBeRead = []; // mensagens da mais recente para a mais antiga
+		this._messages = [];
+		this._messagesToBeRead = [];
 		this._messagesToBeSent = [];
 		this._bots = new Map();
 		
@@ -43,13 +43,13 @@
 	}
 
 	addMessageToBeRead(message) {
-		this._messagesToBeRead.unshift(message);
-		return this._messages.unshift(message);
+		this._messagesToBeRead.push(message);
+		return this._messages.push(message);
 	}
 
 	addMessageToBeSent(message) {
-		this._messagesToBeSent.unshift(message);
-		return this._messages.unshift(message);
+		this._messagesToBeSent.push(message);
+		return this._messages.push(message);
 	}
 
 	reply() {
@@ -59,6 +59,8 @@
 			// } else
 			
 			for (let bot of this._bots.values()) {
+
+				// #TODO concatenar as mensagens?
 				this._messagesToBeRead.forEach(receivedMessage => {
 					console.log(receivedMessage);
 					let receivedMessageTreated = '';
@@ -71,7 +73,7 @@
 					if (receivedMessageTreated.length > 0) {
 						bot.addMessageToBeRead(receivedMessageTreated);
 					}
-				})
+				});
 				bot.reply()
 					.then(answer => {
 						this.addMessageToBeSent(answer);

@@ -20,37 +20,42 @@
 
 	addMessageToBeRead(msg) {
 		this._read = false;
-		return this._messagesToBeRead.unshift(msg);
+		return this._messagesToBeRead.push(msg);
 	}
 	
 	addMessageToBeSent(msg) {
 		this._sent = false;
-		return this._messagesToBeSent.unshift('```[' + this.name + ']``` ' + msg);
+		return this._messagesToBeSent.push('```[' + this.name + ']``` ' + msg);
 	}
 
 	reply() {
-		// #TODO retorna Promise fetch()
 		// #TODO fazer this._messagesToBeRead.length = 0 após resposta
-		// #TODO confirmar se é this._messagesToBeRead[0] mesmo, e se sempre será só 1 mensagem
 		return new Promise((resolve, reject) => {
-			this._api.postMessage(this._messagesToBeRead[0])
+
+			if (!this._messagesToBeRead.length)
+				resolve('');
+
+			// atualmente está sempre pegando só a última mensagem
+			this._api.postMessage(this._messagesToBeRead[this._messagesToBeRead.length - 1])
 				.then(answer => {
 					this.addMessageToBeSent(answer);
-
-					// #TODO checar se será sempre só índice 0
-					resolve(this._messagesToBeSent[0]);
+					// this._messagesToBeRead.pop();
+					this._messagesToBeRead[this._messagesToBeRead.length - 1];
+					// resolve(this._messagesToBeSent.pop());
+					resolve(this._messagesToBeSent[this._messagesToBeSent.length - 1]);
 				});
 		})
 	}
 
-	// boolean ou Promise
+	// Promise
 	postMessage(msg) {
+
 		// #TODO não existe this._chatView
 		this._chatView.postMessage('```[' + this._name + ']``` ' + msg);
 	}
 
 	// #TODO implementar mais tarde
-	// boolean ou Promise
+	// Promise
 	postMessageToBot(bot, msg) {
 		this.postMessage('```[to:' + bot.name + ']```' + msg)
 	}
