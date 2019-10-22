@@ -10,31 +10,31 @@
 		this._messagesViewmodel = new MessagesViewmodel();
 	}
 
-	querySelector(selector, fulfillmentCallback = (element, timeElapsed) => (element || timeElapsed > 3000), rootElement = document) {
+	querySelector(selector, fulfillmentCallback = (element, timeElapsed) => (element || timeElapsed >= 5000), rootElement = document) {
 		return new Promise((resolve, reject) => {
 			let timeElapsed = 0;
 			const intervalID = setInterval(() => {
 				const element = rootElement.querySelector(selector);
-				if (fulfillmentCallback(element, timeElapsed += 100)) {
+				if (fulfillmentCallback(element, timeElapsed += 1000)) {
 					clearInterval(intervalID);
 					resolve(element);
 				}
 			},
-			100);
+			1000);
 		});
 	}
 
-	querySelectorAll(selector, fulfillmentCallback = (elements, timeElapsed) => (elements.length || timeElapsed > 3000), rootElement = document) {
+	querySelectorAll(selector, fulfillmentCallback = (elements, timeElapsed) => (elements.length || timeElapsed >= 5000), rootElement = document) {
 		return new Promise((resolve, reject) => {
 			let timeElapsed = 0;
 			const intervalID = setInterval(() => {
 				const elements = rootElement.querySelectorAll(selector);
-				if (fulfillmentCallback(elements, timeElapsed += 100)) {
+				if (fulfillmentCallback(elements, timeElapsed += 1000)) {
 					clearInterval(intervalID);
 					resolve(elements);
 				}
 			},
-			100);
+			1000);
 		});
 	}
 
@@ -62,13 +62,18 @@
 	async postMessage(msg) {
 		console.log('postMessage', msg);
 		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		let chat = await this.querySelector('._3u328');
+		let chat = await this.querySelector('._3u328', (input, timeElapsed) => (input.textContent === '' || timeElapsed >= 5000));
 		chat.textContent = msg;
 		chat.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, view: window}));
 		document.querySelector('._3M-N-').click(); // Checar se não haverá problema de sincronia
-		let myMessages = await this.querySelectorAll('div.message-out div.-N6Gq');
-		let messageViewmodel = new MessageViewmodel(myMessages[myMessages.length - 1]);
-		this._messagesViewmodel.push(messageViewmodel);
+		
+		let myMessage = await this.querySelector('div.message-out div.-N6Gq');
+		if (myMessage)
+			myMessage = new MessageViewmodel(myMessage);
+
+		myMessage.text = msg;
+		myMessage.datetime = Date.now();
+		this._messagesViewmodel.push(myMessage);
 	}
 
 	async getMessages() {

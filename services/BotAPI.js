@@ -20,8 +20,8 @@
 	}
 
 	postMessage(message) {
-		console.log('postMessage', message);
 		return new Promise((resolve, reject) => {
+			console.log('BotAPI.postMessage', message);
 			this._messages.push(message);
 
 			let icognocheck = '';

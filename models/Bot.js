@@ -37,6 +37,8 @@
 
 	reply() {
 		return new Promise((resolve, reject) => {
+			console.log('Bot.reply()');
+			console.log('bot._messagesToBeRead', this._messagesToBeRead);
 			if (!this._messagesToBeRead.length)
 				resolve();
 

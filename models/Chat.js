@@ -44,18 +44,19 @@
 	}
 
 	clearMessagesToBeRead() {
-		this._messagesToBeSent.length = 0;
+		this._messagesToBeRead.length = 0;
 	}
 
 	popMessagesToBeSent() {
+		console.log('popMessagesToBeSent');
 		const messagesToBeSent = [...this._messagesToBeSent];
 		this._messagesToBeSent.length = 0;
+		console.log(messagesToBeSent);
 		return messagesToBeSent;
 	}
 
 	reply() {
-		return new Promise((resolve, reject) => {
-			let replies = [];
+		return new Promise(async (resolve, reject) => {
 			for (let bot of this._bots.values()) {
 				this._messagesToBeRead.forEach(receivedMessage => {
 					let receivedMessageTreated = '';
@@ -73,21 +74,18 @@
 					if (receivedMessageTreated.length > 1)
 						bot.addMessageToBeRead(receivedMessageTreated);
 				});
-				
-				// #TODO o resolve() abaixo só deveria ser chamado quando TODOS os bots tiverem concluído seus reply()
-				replies.push(
-					bot.reply().then(() => {
-						let answer = bot.getAnswer();
-						if (answer)
-							this.addMessageToBeSent(answer);
-					})
-				);
 			}
 
-			Promise.all(replies).then(() => {
-				this.clearMessagesToBeRead();
-				resolve();
-			})
+			await Promise.all([...this._bots.values()].map(bot => bot.reply()));
+
+			this._bots.forEach(bot => {
+				bot.clearMessagesToBeRead();
+				this.addMessageToBeSent(bot.getAnswer());
+			});
+
+			this.clearMessagesToBeRead();			
+
+			resolve();
 		})
 	}
 }
