@@ -76,14 +76,14 @@
 				});
 			}
 
+			this.clearMessagesToBeRead();			
+
 			await Promise.all([...this._bots.values()].map(bot => bot.reply()));
 
 			this._bots.forEach(bot => {
 				bot.clearMessagesToBeRead();
 				this.addMessageToBeSent(bot.getAnswer());
 			});
-
-			this.clearMessagesToBeRead();			
 
 			resolve();
 		})

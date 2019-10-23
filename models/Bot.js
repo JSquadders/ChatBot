@@ -38,9 +38,11 @@
 	reply() {
 		return new Promise((resolve, reject) => {
 			console.log('Bot.reply()');
-			console.log('bot._messagesToBeRead', this._messagesToBeRead);
-			if (!this._messagesToBeRead.length)
+			console.log(this.name + '_messagesToBeRead', this._messagesToBeRead);
+			if (!this._messagesToBeRead.length) {
 				resolve();
+				return;
+			}
 
 			// pega somente a última mensagem
 			this._api.postMessage(this._messagesToBeRead[this._messagesToBeRead.length - 1])

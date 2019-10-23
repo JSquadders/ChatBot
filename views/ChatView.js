@@ -24,11 +24,12 @@
 		});
 	}
 
+	// #TODO estudar maneira de, através do callback, não só determinar quando terminou a busca, mas também alterar o retorno
 	querySelectorAll(selector, fulfillmentCallback = (elements, timeElapsed) => (elements.length || timeElapsed >= 5000), rootElement = document) {
 		return new Promise((resolve, reject) => {
 			let timeElapsed = 0;
 			const intervalID = setInterval(() => {
-				const elements = rootElement.querySelectorAll(selector);
+				let elements = rootElement.querySelectorAll(selector);
 				if (fulfillmentCallback(elements, timeElapsed += 1000)) {
 					clearInterval(intervalID);
 					resolve(elements);
@@ -67,13 +68,23 @@
 		chat.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, view: window}));
 		document.querySelector('._3M-N-').click(); // Checar se não haverá problema de sincronia
 		
-		let myMessage = await this.querySelector('div.message-out div.-N6Gq');
-		if (myMessage)
-			myMessage = new MessageViewmodel(myMessage);
-
-		myMessage.text = msg;
-		myMessage.datetime = Date.now();
-		this._messagesViewmodel.push(myMessage);
+		let myMessage;
+		await this.querySelectorAll('div.message-out div.-N6Gq', (msgDivs, timeElapsed) => {
+			if (timeElapsed >= 5000)
+				return true;
+			for	(let i = msgDivs.length - 1; i >= 0; i--) {
+				let messageViewmodel = new MessageViewmodel(msgDivs[i]);
+				if (msg === messageViewmodel.text) {
+					myMessage = messageViewmodel;
+					return true;
+				}
+			}
+		});
+		
+		if (!!myMessage)
+			this._messagesViewmodel.push(myMessage);
+		
+		return;
 	}
 
 	async getMessages() {
