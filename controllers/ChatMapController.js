@@ -73,5 +73,6 @@
 				.then(() => unansweredChat.popMessagesToBeSent().forEach(message => unansweredChatView.postMessage(message)))
 				.catch(console.log);
 		}
+		this.listen();
 	}
 }

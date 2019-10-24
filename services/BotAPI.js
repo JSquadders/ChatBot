@@ -39,7 +39,7 @@
 				resolve(response[0]);
 			};
 		
-			let stimulus = `stimulus=${this._messages.reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
+			let stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
 			icognocheck = Cryptography.md5(stimulus.substring(7, 33));
 			
 			console.log(stimulus);
