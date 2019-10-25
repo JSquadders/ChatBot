@@ -91,6 +91,6 @@
 		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 
 		// #TODO dar um tempo mínimo de espera neste querySelector pois demora um pouco até carregar TODAS as mensagens
-		return new MessagesViewmodel(...[...await this.querySelectorAll('div[data-pre-plain-text]')].map(messageDiv => new MessageViewmodel(messageDiv.parentNode)));
+		return new MessagesViewmodel(...[...await this.querySelectorAll('div[data-pre-plain-text]')].map(messageDiv => new MessageViewmodel(messageDiv)));
 	}
 }

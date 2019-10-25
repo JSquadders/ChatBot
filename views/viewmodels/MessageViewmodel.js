@@ -1,21 +1,21 @@
 /*export*/ class MessageViewmodel {
 	
 	constructor(messageDiv) {
-		let data = messageDiv.firstChild.getAttribute('data-pre-plain-text');
+		let data = messageDiv.getAttribute('data-pre-plain-text');
 		if (!data)
 			throw new Error('a MessageViewmodel must have sender, text and datetime');
 		
 		this._sender = data.substr(0, data.length - 2).split('] ')[1];
 		
-		let span = messageDiv.firstChild.firstChild.firstChild.firstChild;
-		this._text = [...span.childNodes].reduce((finalText, node) => {
-			let text = node.nodeValue;
-			if (!text) {
-				let template = node.getAttribute('data-app-text-template');
+		let span = messageDiv.firstChild.firstChild.firstChild;
+		this._text = [...span.childNodes].reduce((finalText, element) => {
+			let text = element.nodeValue;
+			if (!text && element.hasAttribute('data-app-text-template')) {
+				let template = element.getAttribute('data-app-text-template');
 				let decoration = template.substr(0, template.indexOf('$'));
-				text = decoration + node.textContent + decoration;
+				text = decoration + element.textContent + decoration;
 			}
-			return finalText.concat(text);
+			return (text ? finalText.concat(text) : finalText);
 		}, '');
 		
 		this._datetime = new Date(data.substr(14, 4), data.substr(8, 2) - 1, data.substr(11, 2), data.substr(1, 2), data.substr(4, 2));
