@@ -17,7 +17,7 @@
 		this._chatMap = chatMap;
 		this._chatMapView = chatMapView;
 		this._intervalID = 0;
-		this._refreshInterval = 5000;
+		this._refreshInterval = 3000;
 
 		if (this._chatMap.size != this._chatMapView.size)
 			throw new Error("Number of models and views doesn't match.");
@@ -45,7 +45,7 @@
 		this._intervalID = 0;
 	}
 
-	set refreshInterval(value = 5000) {
+	set refreshInterval(value = 3000) {
 		this._refreshInterval = value;
 		if (this._intervalID) {
 			clearInterval(this._intervalID);

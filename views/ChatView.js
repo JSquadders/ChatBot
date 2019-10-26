@@ -91,6 +91,13 @@
 		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 
 		// #TODO dar um tempo mínimo de espera neste querySelector pois demora um pouco até carregar TODAS as mensagens
-		return new MessagesViewmodel(...[...await this.querySelectorAll('div[data-pre-plain-text]')].map(messageDiv => new MessageViewmodel(messageDiv.parentNode)));
+		let previousLength = 0;
+		return new MessagesViewmodel(...[...await this.querySelectorAll('div[data-pre-plain-text]', (messageDivs, timeElapsed) => {
+			if ((timeElapsed >= 5000) || (previousLength && previousLength == messageDivs.length))
+				return true;
+			else
+				previousLength = messageDivs.length;
+			return false;
+		})].map(messageDiv => new MessageViewmodel(messageDiv.parentNode)));
 	}
 }

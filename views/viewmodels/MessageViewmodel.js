@@ -10,8 +10,9 @@
 		let span = messageDiv.firstChild.firstChild.firstChild.firstChild;
 		this._text = [...span.childNodes].reduce((finalText, node) => {
 			let text = node.nodeValue;
-			if (!text) {
-				let template = node.getAttribute('data-app-text-template');
+			let template = node.getAttribute('data-app-text-template');
+			if (!text && template) {
+				console.log(node);
 				let decoration = template.substr(0, template.indexOf('$'));
 				text = decoration + node.textContent + decoration;
 			}
