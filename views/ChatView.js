@@ -98,6 +98,6 @@
 			else
 				previousLength = messageDivs.length;
 			return false;
-		})].map(messageDiv => new MessageViewmodel(messageDiv.parentNode)));
+		})].map(messageDiv => new MessageViewmodel(messageDiv)));
 	}
 }
