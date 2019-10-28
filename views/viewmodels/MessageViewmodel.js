@@ -2,8 +2,10 @@
 	
 	constructor(messageDiv) {
 		let data = messageDiv.getAttribute('data-pre-plain-text');
-		if (!data)
-			throw new Error('a MessageViewmodel must have sender, text and datetime');
+		if (!data) {
+			console.error('tried to create a MessageViewmodel with a wrong DIV:', messageDiv);
+			throw 'a MessageViewmodel must have sender, text and datetime';
+		}
 		
 		this._sender = data.substr(0, data.length - 2).split('] ')[1];
 		

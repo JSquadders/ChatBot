@@ -5,6 +5,7 @@
 	constructor(chat, chatView) {
 		this._chat = chat;
 		this._chatView = chatView;
+		// #TODO criar propriedade id
 	}
 
 	async hasNewMessage() {

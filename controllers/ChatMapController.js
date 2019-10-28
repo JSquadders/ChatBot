@@ -20,12 +20,12 @@
 		this._refreshInterval = 3000;
 
 		if (this._chatMap.size != this._chatMapView.size)
-			throw new Error("Number of models and views doesn't match.");
+			throw "Number of models and views doesn't match.";
 		
 		this._chatMap.forEach(chat => {
 			let chatView = this._chatMapView.get(chat.id);
 			if (!chatView)
-				throw new Error(`There is no chatview called "${chat.id}"`);
+				throw `There is no chatview called "${chat.id}"`;
 			
 			this.set(chat.id, new ChatController(chat, chatView));
 		})
@@ -70,9 +70,13 @@
 			
 			// usar await para facilitar
 			unansweredChat.reply()
-				.then(() => unansweredChat.popMessagesToBeSent().forEach(message => unansweredChatView.postMessage(message)))
-				.catch(console.log);
+				.then(() => {
+					unansweredChat.popMessagesToBeSent().forEach(message => unansweredChatView.postMessage(message));
+					this.listen();
+				}).catch(console.log);
+		} else {
+			// #TODO melhorar lógica para evitar ter listen() 2x
+			this.listen();
 		}
-		this.listen();
 	}
 }

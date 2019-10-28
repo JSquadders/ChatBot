@@ -53,15 +53,13 @@
 	// #TODO checar se não dá problema conforme o scroll avança, já que as mensagens antigas são destruídas na renderização do React
 	popNewMessages() {
 		return new Promise(async (resolve, reject) => {
-			let oldMessagesJSON = this._messagesViewmodel.map(messageViewmodel => JSON.stringify(messageViewmodel));
-			let newMessages = (await this.getMessages()).filter(messageViewmodel => (messageViewmodel.datetime >= this._messagesViewmodel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewmodel))));
+			let newMessages = (await this.getMessages()).remove(this._messagesViewmodel);
 			newMessages.forEach(newMessage => this._messagesViewmodel.push(newMessage));
 			resolve(newMessages);
 		});
 	}
 
 	async postMessage(msg) {
-		console.log('postMessage', msg);
 		document.querySelector('span._19RFN[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 		let chat = await this.querySelector('._3u328', (input, timeElapsed) => (input.textContent === '' || timeElapsed >= 5000));
 		chat.textContent = msg;
@@ -69,12 +67,13 @@
 		document.querySelector('._3M-N-').click(); // Checar se não haverá problema de sincronia
 		
 		let myMessage;
-		await this.querySelectorAll('div.message-out div.-N6Gq', (msgDivs, timeElapsed) => {
+		let now = new Date();
+		await this.querySelectorAll('div.message-out div[data-pre-plain-text]', (msgDivs, timeElapsed) => {
 			if (timeElapsed >= 5000)
 				return true;
 			for	(let i = msgDivs.length - 1; i >= 0; i--) {
 				let messageViewmodel = new MessageViewmodel(msgDivs[i]);
-				if (msg === messageViewmodel.text) {
+				if (msg === messageViewmodel.text && (now - messageViewmodel.datetime <= 60000)) {
 					myMessage = messageViewmodel;
 					return true;
 				}
