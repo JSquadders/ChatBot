@@ -1,6 +1,4 @@
-// import {MessageViewmodel} from './MessageViewmodel';
-
-/*export*/ class MessagesViewmodel extends Array {
+export class MessagesViewmodel extends Array {
 	constructor(...messageViewmodels) {
 		super();
 		this.lastChecked = 0;

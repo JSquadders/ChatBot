@@ -1,5 +1,4 @@
-/*export*/ class Chat {
-	
+export class Chat {
 	constructor(id) {
 		this._id = id;
 		this._messages = [];
@@ -48,10 +47,8 @@
 	}
 
 	popMessagesToBeSent() {
-		console.log('popMessagesToBeSent');
 		const messagesToBeSent = [...this._messagesToBeSent];
 		this._messagesToBeSent.length = 0;
-		console.log(messagesToBeSent);
 		return messagesToBeSent;
 	}
 
@@ -62,9 +59,9 @@
 					let receivedMessageTreated = '';
 					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMessage)) {
 						// #TODO implementar [bot:stop]
-						if (receivedMessage.includes(`[${bot.name}:reset]`))
+						if (receivedMessage.includes('[```' + bot.name + '```:reset]'))
 							return bot.clearMessagesToBeRead();
-						else if (receivedMessage.includes(`[${bot.name}:listening]`))
+						else if (receivedMessage.includes('[```' + bot.name + '```:listening]'))
 							return;
 						receivedMessageTreated = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b[^a-z|\\d|\\u00E0-\\u00FC]*`, 'i'), '');
 						if (/[a-z|\d]\s*$/i.test(receivedMessageTreated))

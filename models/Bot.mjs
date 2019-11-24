@@ -1,6 +1,6 @@
-// import {BotAPI} from '../services/BotAPI';
+import { BotAPI } from '../services/BotAPI';
 
-/*export*/ class Bot {
+export class Bot {
 	constructor(name) {
 		this._name = name;
 
@@ -58,11 +58,5 @@
 		let answers = [...this._messagesToBeSent];
 		this._messagesToBeSent.length = 0;
 		return (answers.length ? answers[answers.length - 1] : '');
-	}
-
-	// #TODO implementar mais tarde
-	// Promise
-	postMessageToBot(bot, msg) {
-		// this.postMessage('```[to:' + bot.name + ']```' + msg)
 	}
 }

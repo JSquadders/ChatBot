@@ -1,0 +1,32 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "Bot that can be integrated in any chat.",
+  "author": "Leokuma",
+  "license": "ISC",
+  "keywords": [
+    "chat",
+    "bot",
+    "chatter"
+  ],
+  "browser": "main.mjs",
+  "scripts": {
+    "prepare": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSquadders/ChatBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JSquadders/ChatBot/issues"
+  },
+  "homepage": "https://github.com/JSquadders/ChatBot#readme",
+  "files": [
+    "bundle.min.mjs"
+  ],
+  "private": true,
+  "devDependencies": {
+    "rollup": "^1.27.3",
+    "rollup-plugin-terser": "^5.1.2"
+  }
+}

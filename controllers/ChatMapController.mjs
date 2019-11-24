@@ -1,9 +1,8 @@
 // #TODO Talvez fazer binding em alguns casos
 // #TODO Ao criar as VIEWs, envolvê-las num Proxy
-// import {ChatController} from './ChatController';
+import { ChatController } from './ChatController';
 
-/*export*/ class ChatMapController extends Map {
-
+export class ChatMapController extends Map {
 	constructor(chatMap, chatMapView) {
 		super();
 		this._chatMap;
@@ -65,7 +64,7 @@
 
 			// #TODO guardar this._chatMap.get(unansweredChat.id) numa variavel
 			let unansweredChat = this._chatMap.get(unansweredChatView.id);
-			console.log(newMessages);
+			console.log('newMessages', newMessages);
 			newMessages.forEach(message => unansweredChat.addMessageToBeRead(message.text));
 			
 			// usar await para facilitar
@@ -75,7 +74,7 @@
 					this.listen();
 				}).catch(console.log);
 		} else {
-			// #TODO melhorar lógica para evitar ter listen() 2x
+			// #todo melhorar lógica para evitar ter listen() 2x
 			this.listen();
 		}
 	}

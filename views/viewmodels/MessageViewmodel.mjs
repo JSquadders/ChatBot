@@ -1,5 +1,4 @@
-/*export*/ class MessageViewmodel {
-	
+export class MessageViewmodel {
 	constructor(messageDiv) {
 		let data = messageDiv.getAttribute('data-pre-plain-text');
 		if (!data) {
