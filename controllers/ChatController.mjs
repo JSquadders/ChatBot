@@ -1,7 +1,4 @@
-// import {Chat} from '../models/Chat';
-// import {ChatView} from '../views/ChatView';
-
-/*export*/ class ChatController {
+export class ChatController {
 	constructor(chat, chatView) {
 		this._chat = chat;
 		this._chatView = chatView;
@@ -12,7 +9,7 @@
 		return await this._chatView.hasNewMessage();
 	}
 
-	// #TODO não está em uso, mas talvez devesse estar
+	// #TODO não está em uso, mas talvez devesse
 	update() {
 	}
 

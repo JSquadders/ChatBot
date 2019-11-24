@@ -1,7 +1,6 @@
-// import {Cryptography} from '../helpers/Cryptography';
+import { Cryptography } from '../helpers/Cryptography';
 
-/*export*/ class BotAPI {
-	
+export class BotAPI {
 	constructor() {
 		this._sessionID;
 		this._XAI;
@@ -21,20 +20,25 @@
 
 	postMessage(message) {
 		return new Promise((resolve, reject) => {
-			console.log('BotAPI.postMessage', message);
 			this._messages.push(message);
 
 			let icognocheck = '';
 			let xhr = new XMLHttpRequest();
 			xhr.withCredentials = true;
 			
-			xhr.open('POST', 'https://www.' + 'c' + 'l' + 'ev' + 'er' + 'bot.com/' + 'webservice' + 'min?uc=UseOfficial' + 'C' + 'l' + 'e' + 'ver' + 'bot' + 'API'
-				+ `&out=${!!this._messages[this._messages.length - 2] ? Cryptography.messageEncode(this._messages[this._messages.length - 2]) : ''}&in=${Cryptography.messageEncode(this._messages[this._messages.length - 1])}&bot=c&cbsid=${this._sessionID}&xai=WXH,${this._XAI}&ns=${this._ns++}&al=&dl=${this.language}&flag=&user=&mode=1&alt=0&reac=&emo=&sou=website&xed=&`); // t=32511&'); #TODO
+			// 88.202.181.104:443
+			let url = 'https://www.' + 'c' + 'l' + 'ev' + 'er' + 'bot.com/' + 'webservice' + 'min?uc=UseOfficial' + 'C' + 'l' + 'e' + 'ver' + 'bot' + 'API&';
+			
+			if (this._sessionID)
+				url.concat(`out=${!!this._messages[this._messages.length - 2] ? Cryptography.messageEncode(this._messages[this._messages.length - 2]) : ''}&in=${Cryptography.messageEncode(this._messages[this._messages.length - 1])}&bot=c&cbsid=${this._sessionID}&xai=${this._sessionID.substr(0, 3)},${this._XAI}&ns=${this._ns++}&al=&dl=${this.language}&flag=&user=&mode=1&alt=0&reac=&emo=&sou=website&xed=&`);
+			
+			xhr.open('POST', url); // t=32511&'); #TODO
 			
 			xhr.onload = e => {
+				console.log(e.target.responseText);
 				const response = e.target.responseText.split('\r');
-				this._sessionID = response[1];
 				this._messages.push(response[0]);
+				this._sessionID = response[1];
 				this._XAI = response[2];
 				resolve(response[0]);
 			};
