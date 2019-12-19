@@ -1,4 +1,4 @@
-import { Cryptography } from '../helpers/Cryptography';
+import { Cryptography } from '../helpers/Cryptography.mjs';
 
 export class BotAPI {
 	constructor() {
@@ -19,7 +19,7 @@ export class BotAPI {
 	}
 
 	postMessage(message) {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this._messages.push(message);
 
 			let icognocheck = '';
@@ -48,6 +48,6 @@ export class BotAPI {
 			
 			console.log(stimulus);
 			xhr.send(stimulus + '&icognocheck=' + icognocheck);
-		})
+		});
 	}
 }

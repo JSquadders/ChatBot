@@ -4,34 +4,34 @@ export class Cryptography {
 	static _f(p) {
 		let o = '', m = 0;
 		for (; m < 4; m++) {
-			o += _g[(p >> (m * 8 + 4)) & 15] + _g[(p >> (m * 8)) & 15]
+			o += _g[(p >> (m * 8 + 4)) & 15] + _g[(p >> (m * 8)) & 15];
 		}
-		return o
+		return o;
 	}
 	
 	static _d(n, m) {
-		return (n + m) & 4294967295
+		return (n + m) & 4294967295;
 	}
 	
 	static _j(u, o, n, m, r, p) {
 		o = this._d(this._d(o, u), this._d(m, p));
-		return this._d((o << r) | (o >>> (32 - r)), n)
+		return this._d((o << r) | (o >>> (32 - r)), n);
 	}
 	
 	static _e(o, n, u, r, m, q, p) {
-		return this._j(n ^ u ^ r, o, n, m, q, p)
+		return this._j(n ^ u ^ r, o, n, m, q, p);
 	}
 	
 	static _k(o, n, u, r, m, q, p) {
-		return this._j(u ^ (n | (~r)), o, n, m, q, p)
+		return this._j(u ^ (n | (~r)), o, n, m, q, p);
 	}
 	
 	static _h(o, n, u, r, m, q, p) {
-		return this._j((n & r) | (u & (~r)), o, n, m, q, p)
+		return this._j((n & r) | (u & (~r)), o, n, m, q, p);
 	}
 	
 	static _a(o, n, u, r, m, q, p) {
-		return this._j((n & u) | ((~n) & r), o, n, m, q, p)
+		return this._j((n & u) | ((~n) & r), o, n, m, q, p);
 	}
 	
 	static _c(n, p) {
@@ -103,37 +103,37 @@ export class Cryptography {
 		n[0] = this._d(o, n[0]);
 		n[1] = this._d(m, n[1]);
 		n[2] = this._d(r, n[2]);
-		n[3] = this._d(q, n[3])
+		n[3] = this._d(q, n[3]);
 	}
 	
 	static _i(p) {
 		// let txt = '';
 		let r = p.length, q = [1732584193, - 271733879, - 1732584194, 271733878], o;
-		for (o = 64; o <= p.length; o += 64) {
-			this._c(q, l(p.substring(o - 64, o)))
-		}
+		// for (o = 64; o <= p.length; o += 64) {
+		// 	this._c(q, l(p.substring(o - 64, o)));
+		// }
 		p = p.substring(o - 64);
 		let m = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		for (o = 0; o < p.length; o++) {
-			m[o >> 2] |= p.charCodeAt(o) << ((o % 4) << 3)
+			m[o >> 2] |= p.charCodeAt(o) << ((o % 4) << 3);
 		}
 		m[o >> 2] |= 128 << ((o % 4) << 3);
 		if (o > 55) {
 			this._c(q, m);
 			for (o = 0; o < 16; o++) {
-				m[o] = 0
+				m[o] = 0;
 			}
 		}
 		m[14] = r * 8;
 		this._c(q, m);
-		return q
+		return q;
 	}
 		
 	static _b(m) {
 		for (let n = 0; n < m.length; n++) {
-			m[n] = this._f(m[n])
+			m[n] = this._f(m[n]);
 		}
-		return m.join('')
+		return m.join('');
 	}
 	
 	static md5(m) {
@@ -151,7 +151,7 @@ export class Cryptography {
 					msgEncoded += sBuffer;
 				}
 			} else {
-				msgEncoded += msg.charAt(i)
+				msgEncoded += msg.charAt(i);
 			}
 		}
 		

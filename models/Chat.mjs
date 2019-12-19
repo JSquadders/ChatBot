@@ -53,7 +53,7 @@ export class Chat {
 	}
 
 	reply() {
-		return new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve) => {
 			for (let bot of this._bots.values()) {
 				this._messagesToBeRead.forEach(receivedMessage => {
 					let receivedMessageTreated = '';
@@ -83,6 +83,6 @@ export class Chat {
 			});
 
 			resolve();
-		})
+		});
 	}
 }

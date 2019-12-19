@@ -1,6 +1,6 @@
 // #TODO Talvez fazer binding em alguns casos
 // #TODO Ao criar as VIEWs, envolvê-las num Proxy
-import { ChatController } from './ChatController';
+import { ChatController } from './ChatController.mjs';
 
 export class ChatMapController extends Map {
 	constructor(chatMap, chatMapView) {
@@ -19,7 +19,7 @@ export class ChatMapController extends Map {
 		this._refreshInterval = 3000;
 
 		if (this._chatMap.size != this._chatMapView.size)
-			throw "Number of models and views doesn't match.";
+			throw 'Number of models and views doesn\'t match.';
 		
 		this._chatMap.forEach(chat => {
 			let chatView = this._chatMapView.get(chat.id);
@@ -27,7 +27,7 @@ export class ChatMapController extends Map {
 				throw `There is no chatview called "${chat.id}"`;
 			
 			this.set(chat.id, new ChatController(chat, chatView));
-		})
+		});
 	}
 
 	listen() {

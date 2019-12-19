@@ -1,5 +1,5 @@
-import { MessageViewmodel } from './viewmodels/MessageViewmodel';
-import { MessagesViewmodel } from './viewmodels/MessagesViewmodel';
+import { MessageViewmodel } from './viewmodels/MessageViewmodel.mjs';
+import { MessagesViewmodel } from './viewmodels/MessagesViewmodel.mjs';
 
 export class ChatView {
 	constructor(id) {
@@ -8,7 +8,11 @@ export class ChatView {
 		this._messagesViewmodel = new MessagesViewmodel();
 	}
 
+	/* eslint-disable no-cond-assign */
+	
+	/* eslint-disable no-unused-vars */
 	querySelector(selector, interval, fulfillmentCallback = (timeElapsed, currentElement, previousElement) => (currentElement || timeElapsed >= 10000), rootElement = document) {
+		/* eslint-enable no-unused-vars */
 		return new Promise((resolve) => {
 			let result = [], currentElement, previousElement = null, timeElapsed = 0;
 			
@@ -24,7 +28,9 @@ export class ChatView {
 		});
 	}
 
+	/* eslint-disable no-unused-vars */
 	querySelectorAll(selector, interval, fulfillmentCallback = (timeElapsed, currentElements, previousElements) => ((currentElements.length || timeElapsed >= 5000) ? currentElements : false), rootElement = document) {
+		/* eslint-enable no-unused-vars */
 		return new Promise((resolve) => {
 			let result = [], currentElements, previousElements = null, timeElapsed = 0;
 			
@@ -40,12 +46,14 @@ export class ChatView {
 		});
 	}
 
+	/* eslint-enable no-cond-assign */
+
 	get id() {
 		return this._id;
 	}
 
 	hasNewMessage() {
-		return new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve) => {
 			let oldMessagesJSON = this._messagesViewmodel.map(messageViewmodel => JSON.stringify(messageViewmodel));
 			resolve(!!(await this.getMessages()).filter(messageViewmodel => (messageViewmodel.datetime >= this._messagesViewmodel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewmodel)))).length);
 		});
@@ -53,7 +61,7 @@ export class ChatView {
 
 	// #TODO checar se não dá problema conforme o scroll avança, já que as mensagens antigas são destruídas na renderização do React
 	popNewMessages() {
-		return new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve) => {
 			let newMessages = (await this.getMessages()).remove(this._messagesViewmodel);
 			newMessages.forEach(newMessage => this._messagesViewmodel.push(newMessage));
 			resolve(newMessages);

@@ -1,7 +1,7 @@
 {
   "name": "chatbot",
-  "version": "1.0.0",
-  "description": "Bot that can be integrated in any chat.",
+  "version": "1.1.0",
+  "description": "Chatbot that can be integrated in any chat.",
   "author": "Leokuma",
   "license": "ISC",
   "keywords": [
@@ -11,7 +11,9 @@
   ],
   "browser": "main.mjs",
   "scripts": {
-    "prepare": "rollup -c"
+    "prepare": "rollup -c --environment PRODUCTION",
+    "watch": "rollup -c --watch --environment DEVELOPMENT",
+    "build": "rollup -c --environment DEVELOPMENT"
   },
   "repository": {
     "type": "git",
@@ -26,7 +28,9 @@
   ],
   "private": true,
   "devDependencies": {
-    "rollup": "^1.27.3",
-    "rollup-plugin-terser": "^5.1.2"
+    "eslint": "^6.7.2",
+    "rollup": "^1.27.11",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-terser": "^5.1.3"
   }
 }

@@ -1,4 +1,4 @@
-import { BotAPI } from '../services/BotAPI';
+import { BotAPI } from '../services/BotAPI.mjs';
 
 export class Bot {
 	constructor(name) {
@@ -36,7 +36,7 @@ export class Bot {
 	}
 
 	reply() {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			console.log('Bot.reply()');
 			console.log(this.name + '_messagesToBeRead', this._messagesToBeRead);
 			if (!this._messagesToBeRead.length) {
@@ -51,7 +51,7 @@ export class Bot {
 					this._messagesToBeRead.length = 0;
 					resolve();
 				});
-		})
+		});
 	}
 
 	getAnswer() {
