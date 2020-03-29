@@ -11,9 +11,9 @@
   ],
   "browser": "main.mjs",
   "scripts": {
-    "prepare": "rollup -c --environment PRODUCTION",
-    "watch": "rollup -c --watch --environment DEVELOPMENT",
-    "build": "rollup -c --environment DEVELOPMENT"
+    "prepare": "rollup -c --environment RELEASE",
+    "watch": "rollup -c --watch",
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
