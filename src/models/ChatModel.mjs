@@ -1,4 +1,4 @@
-export class Chat {
+export class ChatModel {
 	constructor(id) {
 		this._id = id;
 		this._messages = [];
@@ -11,7 +11,7 @@ export class Chat {
 		return this._bots;
 	}
 
-	// #TODO talvez não precise mais, agora que os bots estão expostos
+	// @todo Probably not needed anymore as bots are exposed
 	addBot(bot) {
 		this._bots.set(bot.name, bot);
 	}
@@ -56,20 +56,19 @@ export class Chat {
 		return new Promise(async (resolve) => {
 			for (let bot of this._bots.values()) {
 				this._messagesToBeRead.forEach(receivedMessage => {
-					let receivedMessageTreated = '';
 					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMessage)) {
-						// #TODO implementar [bot:stop]
+						// @todo Implement [bot:stop]
 						if (receivedMessage.includes('[```' + bot.name + '```:reset]'))
 							return bot.clearMessagesToBeRead();
 						else if (receivedMessage.includes('[```' + bot.name + '```:listening]'))
 							return;
-						receivedMessageTreated = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b[^a-z|\\d|\\u00E0-\\u00FC]*`, 'i'), '');
-						if (/[a-z|\d]\s*$/i.test(receivedMessageTreated))
-							receivedMessageTreated += '.';
+						receivedMessage = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b[^a-z|\\d|\\u00E0-\\u00FC]*`, 'i'), '');
+						if (/[a-z|\d]\s*$/i.test(receivedMessage))
+							receivedMessage += '.';
 					}
 
-					if (receivedMessageTreated.length > 1)
-						bot.addMessageToBeRead(receivedMessageTreated);
+					if (receivedMessage.length > 1)
+						bot.addMessageToBeRead(receivedMessage);
 				});
 			}
 

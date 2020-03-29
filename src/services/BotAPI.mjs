@@ -1,4 +1,4 @@
-import { Cryptography } from '../helpers/Cryptography.mjs';
+import { Cryptography } from '../helpers/Cryptography';
 
 export class BotAPI {
 	constructor() {
@@ -32,10 +32,10 @@ export class BotAPI {
 			if (this._sessionID)
 				url.concat(`out=${!!this._messages[this._messages.length - 2] ? Cryptography.messageEncode(this._messages[this._messages.length - 2]) : ''}&in=${Cryptography.messageEncode(this._messages[this._messages.length - 1])}&bot=c&cbsid=${this._sessionID}&xai=${this._sessionID.substr(0, 3)},${this._XAI}&ns=${this._ns++}&al=&dl=${this.language}&flag=&user=&mode=1&alt=0&reac=&emo=&sou=website&xed=&`);
 			
-			xhr.open('POST', url); // t=32511&'); #TODO
+			xhr.open('POST', url); // t=32511&'); @todo Missing argument
 			
 			xhr.onload = e => {
-				console.log(e.target.responseText);
+				console.log('Response: ', e.target.responseText);
 				const response = e.target.responseText.split('\r');
 				this._messages.push(response[0]);
 				this._sessionID = response[1];
@@ -46,7 +46,7 @@ export class BotAPI {
 			let stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
 			icognocheck = Cryptography.md5(stimulus.substring(7, 33));
 			
-			console.log(stimulus);
+			console.log('Payload: ', stimulus);
 			xhr.send(stimulus + '&icognocheck=' + icognocheck);
 		});
 	}

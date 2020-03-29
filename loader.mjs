@@ -1,7 +1,7 @@
-import { ChatView } from './views/ChatView.mjs';
-import { ChatMapView } from './views/ChatMapView.mjs';
-import { Bot } from './models/Bot.mjs';
-import { Chat } from './models/Chat.mjs';
-import { ChatMap } from './models/ChatMap.mjs';
-import { ChatController } from './controllers/ChatController.mjs';
-import { ChatMapController } from './controllers/ChatMapController.mjs';
+import { ChatView } from './src/views/ChatView';
+// import { ChatViewMap } from './src/views/ChatViewMap';
+import { Bot } from './src/models/Bot';
+import { ChatModel } from './src/models/ChatModel';
+// import { ChatModelMap } from './src/models/ChatModelMap';
+import { ChatController } from './src/controllers/ChatController';
+import { ChatControllerMap } from './src/controllers/ChatControllerMap';
