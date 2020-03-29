@@ -20,6 +20,7 @@ export class BotAPI {
 
 	postMessage(message) {
 		return new Promise((resolve) => {
+			message = message[0].toUpperCase() + message.slice(1);
 			this._messages.push(message);
 
 			let icognocheck = '';
