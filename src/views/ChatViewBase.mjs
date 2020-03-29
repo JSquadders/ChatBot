@@ -1,17 +1,15 @@
-import { MessageViewmodel } from './viewmodels/MessageViewmodel.mjs';
-import { MessagesViewmodel } from './viewmodels/MessagesViewmodel.mjs';
+import { MessageViewModel } from './viewmodels/MessageViewModel';
+import { MessagesViewModel } from './viewmodels/MessagesViewModel';
 
-export class ChatView {
+export class ChatViewBase {
 	constructor(id) {
-		// Pode ser o nome da conversa, do grupo ou da pessoa
 		this._id = id;
-		this._messagesViewmodel = new MessagesViewmodel();
+		this._messagesViewModel = new MessagesViewModel();
 	}
 
 	/* eslint-disable no-cond-assign */
-	
 	/* eslint-disable no-unused-vars */
-	querySelector(selector, interval, fulfillmentCallback = (timeElapsed, currentElement, previousElement) => (currentElement || timeElapsed >= 10000), rootElement = document) {
+	querySelector(selector, interval, fulfillmentCallback = (timeElapsed, currentElement, previousElement) => (currentElement || timeElapsed >= 3000), rootElement = document) {
 		/* eslint-enable no-unused-vars */
 		return new Promise((resolve) => {
 			let result = [], currentElement, previousElement = null, timeElapsed = 0;
@@ -29,7 +27,7 @@ export class ChatView {
 	}
 
 	/* eslint-disable no-unused-vars */
-	querySelectorAll(selector, interval, fulfillmentCallback = (timeElapsed, currentElements, previousElements) => ((currentElements.length || timeElapsed >= 5000) ? currentElements : false), rootElement = document) {
+	querySelectorAll(selector, interval, fulfillmentCallback = (timeElapsed, currentElements, previousElements) => ((currentElements.length || timeElapsed >= 3000) ? currentElements : false), rootElement = document) {
 		/* eslint-enable no-unused-vars */
 		return new Promise((resolve) => {
 			let result = [], currentElements, previousElements = null, timeElapsed = 0;
@@ -54,16 +52,15 @@ export class ChatView {
 
 	hasNewMessage() {
 		return new Promise(async (resolve) => {
-			let oldMessagesJSON = this._messagesViewmodel.map(messageViewmodel => JSON.stringify(messageViewmodel));
-			resolve(!!(await this.getMessages()).filter(messageViewmodel => (messageViewmodel.datetime >= this._messagesViewmodel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewmodel)))).length);
+			let oldMessagesJSON = this._messagesViewModel.map(messageViewModel => JSON.stringify(messageViewModel));
+			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.datetime >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
 		});
 	}
 
-	// #TODO checar se não dá problema conforme o scroll avança, já que as mensagens antigas são destruídas na renderização do React
 	popNewMessages() {
 		return new Promise(async (resolve) => {
-			let newMessages = (await this.getMessages()).remove(this._messagesViewmodel);
-			newMessages.forEach(newMessage => this._messagesViewmodel.push(newMessage));
+			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
+			newMessages.forEach(newMessage => this._messagesViewModel.push(newMessage));
 			resolve(newMessages);
 		});
 	}
@@ -85,15 +82,15 @@ export class ChatView {
 		let myMessage;
 		let now = new Date();
 
-		// #todo está ruim atribuir messageViewModel dentro do querySelector
+		// @todo messageViewModel is being assigned inside the 'querySelector', which is not really nice.
 		await this.querySelectorAll('div.message-out div[data-pre-plain-text]', 1000, (timeElapsed, msgDivs) => {
 			if (timeElapsed >= 5000)
 				return msgDivs;
 			for	(let i = msgDivs.length - 1; i >= 0; i--) {
-				let messageViewmodel = new MessageViewmodel(msgDivs[i]);
-				console.log(messageViewmodel);
-				if (message === messageViewmodel.text && (now - messageViewmodel.datetime <= 60000)) {
-					myMessage = messageViewmodel;
+				let messageViewModel = new MessageViewModel(msgDivs[i]);
+				console.log(messageViewModel);
+				if (message === messageViewModel.text && (now - messageViewModel.datetime <= 60000)) {
+					myMessage = messageViewModel;
 					return msgDivs;
 				}
 			}
@@ -101,22 +98,19 @@ export class ChatView {
 		});
 		
 		if (!!myMessage)
-			this._messagesViewmodel.push(myMessage);
-		
-		// console.log('myMessage', myMessage);	
+			this._messagesViewModel.push(myMessage);
 	}
 
 	async getMessages() {
 		document.querySelector('span._19RFN[title="' + this.id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 
-		// #TODO dar um tempo mínimo de espera neste querySelector pois demora um pouco até carregar TODAS as mensagens
 		let previousLength = 0;
-		return new MessagesViewmodel(...[...await this.querySelectorAll('div[data-pre-plain-text]', 1000, (timeElapsed, messageDivs) => {
+		return new MessagesViewModel(...[...await this.querySelectorAll('div[data-pre-plain-text]', 1000, (timeElapsed, messageDivs) => {
 			if ((timeElapsed >= 5000) || (previousLength && previousLength == messageDivs.length))
 				return messageDivs;
 			else
 				previousLength = messageDivs.length;
 			return false;
-		})].map(messageDiv => new MessageViewmodel(messageDiv)));
+		})].map(messageDiv => new MessageViewModel(messageDiv)));
 	}
 }

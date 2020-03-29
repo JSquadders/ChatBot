@@ -1,9 +1,11 @@
-export class MessageViewmodel {
+export class MessageViewModel {
 	constructor(messageDiv) {
+		console.log('Parsing message', messageDiv);
+		
 		let data = messageDiv.getAttribute('data-pre-plain-text');
 		if (!data) {
-			console.error('tried to create a MessageViewmodel with a wrong DIV:', messageDiv);
-			throw 'a MessageViewmodel must have sender, text and datetime';
+			console.error('tried to create a MessageViewModel with a wrong DIV:', messageDiv);
+			throw 'a MessageViewModel must have sender, text and datetime';
 		}
 		
 		this._sender = data.substr(0, data.length - 2).split('] ')[1];
@@ -11,15 +13,16 @@ export class MessageViewmodel {
 		let span = messageDiv.firstChild.firstChild.firstChild;
 		this._text = [...span.childNodes].reduce((finalText, element) => {
 			let text = element.nodeValue;
-			if (!text && element.hasAttribute('data-app-text-template')) {
+			if (!text && (text !== '') && element.hasAttribute('data-app-text-template')) {
 				let template = element.getAttribute('data-app-text-template');
 				let decoration = template.substr(0, template.indexOf('$'));
 				text = decoration + element.textContent + decoration;
 			}
 			return (text ? finalText.concat(text) : finalText);
 		}, '');
-		
-		this._datetime = new Date(data.substr(14, 4), data.substr(8, 2) - 1, data.substr(11, 2), data.substr(1, 2), data.substr(4, 2));
+
+		data = [...data.matchAll(/\d+/g)];
+		this._datetime = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
 	}
 
 	get datetime() {

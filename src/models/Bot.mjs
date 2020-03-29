@@ -1,4 +1,4 @@
-import { BotAPI } from '../services/BotAPI.mjs';
+import { BotAPI } from '../services/BotAPI';
 
 export class Bot {
 	constructor(name) {
@@ -37,14 +37,12 @@ export class Bot {
 
 	reply() {
 		return new Promise((resolve) => {
-			console.log('Bot.reply()');
-			console.log(this.name + '_messagesToBeRead', this._messagesToBeRead);
 			if (!this._messagesToBeRead.length) {
 				resolve();
 				return;
 			}
 
-			// pega somente a última mensagem
+			// currently read only the last message
 			this._api.postMessage(this._messagesToBeRead[this._messagesToBeRead.length - 1])
 				.then(answer => {
 					this.addMessageToBeSent(answer);
