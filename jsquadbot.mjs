@@ -538,7 +538,7 @@ class ChatModel {
 							return bot.clearMessagesToBeRead();
 						else if (receivedMessage.includes('[```' + bot.name + '```:listening]'))
 							return;
-						receivedMessage = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b[^a-z|\\d|\\u00E0-\\u00FC]*`, 'i'), '');
+						receivedMessage = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b`, 'i'), '').replace(/^\W+/, '');
 						if (/[a-z|\d]\s*$/i.test(receivedMessage))
 							receivedMessage += '.';
 					}
