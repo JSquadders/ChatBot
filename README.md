@@ -14,7 +14,7 @@ Another advantage from the MVVM approach is that you can use only the functional
 
 1. Open a new tab in your browser and access the ```clever bot``` website. That's so your browser can load the required cookies.
 
-1. Inject all the code from `jsquadbot.min.mjs` into the webpage. There are several ways to do that. The most straightforward one is to just copy and paste it into the browser console. Another way is to use a browser extension that allows JS code to be injected automatically.
+1. Inject all the code from [jsquadbot.min.mjs](./jsquadbot.min.mjs) into the webpage. There are several ways to do that. The most straightforward one is to just copy and paste it into the browser console. Another way is to use a browser extension that allows JS code to be injected automatically.
 
 The injected code does nothing until it's actually called. See the examples below.
 
