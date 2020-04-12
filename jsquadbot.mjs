@@ -6,9 +6,9 @@ class MessagesViewModel extends Array {
 	}
 
 	push(messageViewModel) {
-		if (messageViewModel.sender && messageViewModel.text) {
-			if (messageViewModel.datetime > this.lastChecked)
-				this.lastChecked = messageViewModel.datetime;
+		if (messageViewModel.author && messageViewModel.text) {
+			if (messageViewModel.date > this.lastChecked)
+				this.lastChecked = messageViewModel.date;
 			return super.push(messageViewModel);
 		}
 		return false;
@@ -18,7 +18,7 @@ class MessagesViewModel extends Array {
 		let result = [];
 		let _messagesViewModel = [...messagesViewModel];
 		this.forEach(thisMessageViewModel => {
-			let foundIndex = _messagesViewModel.findIndex(messageViewModel => (thisMessageViewModel.sender == messageViewModel.sender) && (thisMessageViewModel.text == messageViewModel.text) && (Math.abs(thisMessageViewModel.datetime - messageViewModel.datetime) <= 60000));
+			let foundIndex = _messagesViewModel.findIndex(messageViewModel => (thisMessageViewModel.author === messageViewModel.author) && (thisMessageViewModel.text === messageViewModel.text) && (Math.abs(thisMessageViewModel.date - messageViewModel.date) <= 60000));
 			if (foundIndex > -1)
 				_messagesViewModel.splice(foundIndex, 1);
 			else
@@ -29,50 +29,33 @@ class MessagesViewModel extends Array {
 }
 
 class MessageViewModel {
-	constructor(messageDiv) {
-		console.log('Parsing message', messageDiv);
-		
-		let data = messageDiv.getAttribute('data-pre-plain-text');
-		if (!data) {
-			console.error('tried to create a MessageViewModel with a wrong DIV:', messageDiv);
-			throw 'a MessageViewModel must have sender, text and datetime';
-		}
-		
-		this._sender = data.substr(0, data.length - 2).split('] ')[1];
-		
-		let span = messageDiv.firstChild.firstChild.firstChild;
-		this._text = [...span.childNodes].reduce((finalText, element) => {
-			let text = element.nodeValue;
-			if (!text && (text !== '') && element.hasAttribute('data-app-text-template')) {
-				let template = element.getAttribute('data-app-text-template');
-				let decoration = template.substr(0, template.indexOf('$'));
-				text = decoration + element.textContent + decoration;
-			}
-			return (text ? finalText.concat(text) : finalText);
-		}, '');
+	constructor(author, text, date) {
+		if (!author || !text || !date)
+			throw `Could not create a MessageViewModel with author "${author}", text "${text}" and date "${date}"`;
 
-		data = [...data.matchAll(/\d+/g)];
-		this._datetime = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
+		this._author = author;
+		this._text = text;
+		this._date = date;
 	}
 
-	get datetime() {
-		return this._datetime;
+	get date() {
+		return this._date;
 	}
 
-	get sender() {
-		return this._sender;
+	get author() {
+		return this._author;
 	}
 
 	get text() {
 		return this._text;
 	}
 
-	set datetime(value) {
-		return this._datetime = value;
+	set date(value) {
+		return this._date = value;
 	}
 
-	set sender(value) {
-		return this._sender = value;
+	set author(value) {
+		return this._author = value;
 	}
 
 	set text(value) {
@@ -80,10 +63,16 @@ class MessageViewModel {
 	}
 }
 
+/* eslint-disable no-unused-vars */
+/* eslint-enable no-unused-vars */
+
 class ChatView {
 	constructor(id) {
 		this._id = id;
-		this._messagesViewModel = new MessagesViewModel();
+	}
+
+	get id() {
+		return this._id;
 	}
 
 	/* eslint-disable no-cond-assign */
@@ -124,30 +113,82 @@ class ChatView {
 	}
 	/* eslint-enable no-cond-assign */
 
-	get id() {
-		return this._id;
-	}
-
 	hasNewMessage() {
 		return new Promise(async (resolve) => {
 			let oldMessagesJSON = this._messagesViewModel.map(messageViewModel => JSON.stringify(messageViewModel));
-			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.datetime >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
+			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.date >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
 		});
 	}
 
 	popNewMessages() {
 		return new Promise(async (resolve) => {
 			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
+			console.log('New messages', newMessages);
 			newMessages.forEach(newMessage => this._messagesViewModel.push(newMessage));
 			resolve(newMessages);
 		});
 	}
 
+	/* eslint-disable no-unused-vars */
 	async postMessage(message) {
-		console.log('Switching to chat');		
-		document.querySelector('span._1wjpf._3NFp9._3FXB1[title="' + this._id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
-		console.log('Waiting for page to open');
-		await this.querySelector('header span[title="' + this.id + '"]', 1000);
+		/* eslint-enable no-unused-vars */
+		throw 'async postMessage() must be implemented.';
+	}
+	
+	async getMessages() {
+		throw 'async getMessages() must be implemented.';
+	}
+
+	async switch() {
+		throw 'async switch() must be implemented.';
+	}
+}
+
+class ChatViewWhatsApp extends ChatView {
+	constructor(id) {
+		super(id);
+		this._messagesViewModel = new MessagesViewModel();
+	}
+
+	async switch() {
+		console.log('Switching to chat');
+		document.querySelector(`span._1wjpf._3NFp9._3FXB1[title='${this._id}']`).dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+		console.log('Waiting for page to load');
+		await this.querySelector(`header span[title='${this.id}']`, 1000);
+		await this.querySelector('._3dGYA', 1000, (timeElapsed, currentElement) => ((timeElapsed >= 5000) || (currentElement.title === 'load earlier messages…')));
+		console.log('Loaded');
+	}
+
+	parseMessage(messageDiv) {
+		console.log('Parsing', messageDiv);
+		
+		let data = messageDiv.dataset.prePlainText;
+		if (!data) {
+			console.error('Tried to create a MessageViewModel with a wrong DIV:', messageDiv);
+			throw 'A MessageViewModel must have author, text and date';
+		}
+
+		let author = data.substr(0, data.length - 2).split('] ')[1];
+
+		let text = [...messageDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
+			let node = element.nodeValue;
+			if (!node && (node !== '') && element.dataset.appTextTemplate) {
+				let template = element.dataset.appTextTemplate;
+				let decoration = template.substr(0, template.indexOf('$'));
+				node = decoration + element.textContent + decoration;
+			}
+			return (node ? finalText.concat(node) : finalText);
+		}, '');
+
+		data = [...data.matchAll(/\d+/g)];
+		let date = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
+
+		let message = new MessageViewModel(author, text, date);
+		return message;
+	}
+
+	async postMessage(message) {
+		await this.switch();
 		console.log('Selecting input to send message');
 		let input = await this.querySelector('footer div[contenteditable]', 1000, (timeElapsed, input) => {
 			if (input) {
@@ -161,41 +202,36 @@ class ChatView {
 		console.log('Clicking send button');
 		(await this.querySelector('button._35EW6', 1000)).click();
 
-		let myMessage;
 		let now = new Date();
 
 		console.log('Retrieving message just sent');
-		// @todo messageViewModel is being assigned inside the 'querySelector', which is not really nice.
-		await this.querySelectorAll('div.message-out div[data-pre-plain-text]', 1000, (timeElapsed, msgDivs) => {
+		let myMessage = await this.querySelectorAll('div.message-out:nth-last-child(-n+5) div[data-pre-plain-text]', 1000, (timeElapsed, msgDivs) => {
 			if (timeElapsed >= 5000)
 				return msgDivs;
 			for	(let i = msgDivs.length - 1; i >= 0; i--) {
-				let messageViewModel = new MessageViewModel(msgDivs[i]);
-				console.log(messageViewModel);
-				if (message === messageViewModel.text && (now - messageViewModel.datetime <= 60000)) {
-					myMessage = messageViewModel;
-					return msgDivs;
-				}
+				let messageViewModel = this.parseMessage(msgDivs[i]);
+				if (message === messageViewModel.text && (now - messageViewModel.date <= 60000))
+					return messageViewModel;
 			}
 			return false;
 		});
 		
+		console.log('Message sent', myMessage);		
 		if (!!myMessage)
 			this._messagesViewModel.push(myMessage);
 	}
 
 	async getMessages() {
-		document.querySelector('span._1wjpf._3NFp9._3FXB1[title="' + this.id + '"]').dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+		await this.switch();
 
-		// @todo Provide an initial delay to make sure all the messages have been loaded
 		let previousLength = 0;
-		return new MessagesViewModel(...[...await this.querySelectorAll('div[data-pre-plain-text]', 1000, (timeElapsed, messageDivs) => {
-			if ((timeElapsed >= 5000) || ((document.querySelector('._3dGYA').title === 'load earlier messages…') && previousLength && (previousLength == messageDivs.length)))
+		return new MessagesViewModel(...[...await this.querySelectorAll('div[data-pre-plain-text]', 2000, (timeElapsed, messageDivs) => {
+			if ((timeElapsed >= 6000) || (previousLength && (previousLength == messageDivs.length)))
 				return messageDivs;
 			else
 				previousLength = messageDivs.length;
 			return false;
-		})].map(messageDiv => new MessageViewModel(messageDiv)));
+		})].map(messageDiv => this.parseMessage(messageDiv)));
 	}
 }
 
@@ -563,10 +599,13 @@ class ChatModel {
 }
 
 class ChatController {
-	constructor(id) {
-		this._chatModel = new ChatModel(id);
-		this._chatView = new ChatView(id);
-		this._id = id;
+	constructor(chatView) {
+		if (!(chatView instanceof ChatView))
+			throw `Invalid ChatView object: ${chatView}`;
+
+		this._id = chatView.id;
+		this._chatModel = new ChatModel(chatView.id);
+		this._chatView = chatView;
 	}
 
 	get id() {
@@ -583,11 +622,7 @@ class ChatController {
 
 	async update() {
 		if (await this.hasNewMessage()) {
-			let newMessages = await this.popNewMessages();
-
-			console.log('newMessages', newMessages);
-			newMessages.forEach(message => this.addMessageToBeRead(message.text));
-			
+			(await this.popNewMessages()).forEach(message => this.addMessageToBeRead(message.text));			
 			await this.reply();
 			this.popMessagesToBeSent().forEach(message => this.postMessage(message));
 		}

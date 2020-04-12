@@ -6,9 +6,9 @@ export class MessagesViewModel extends Array {
 	}
 
 	push(messageViewModel) {
-		if (messageViewModel.sender && messageViewModel.text) {
-			if (messageViewModel.datetime > this.lastChecked)
-				this.lastChecked = messageViewModel.datetime;
+		if (messageViewModel.author && messageViewModel.text) {
+			if (messageViewModel.date > this.lastChecked)
+				this.lastChecked = messageViewModel.date;
 			return super.push(messageViewModel);
 		}
 		return false;
@@ -18,7 +18,7 @@ export class MessagesViewModel extends Array {
 		let result = [];
 		let _messagesViewModel = [...messagesViewModel];
 		this.forEach(thisMessageViewModel => {
-			let foundIndex = _messagesViewModel.findIndex(messageViewModel => (thisMessageViewModel.sender == messageViewModel.sender) && (thisMessageViewModel.text == messageViewModel.text) && (Math.abs(thisMessageViewModel.datetime - messageViewModel.datetime) <= 60000));
+			let foundIndex = _messagesViewModel.findIndex(messageViewModel => (thisMessageViewModel.author === messageViewModel.author) && (thisMessageViewModel.text === messageViewModel.text) && (Math.abs(thisMessageViewModel.date - messageViewModel.date) <= 60000));
 			if (foundIndex > -1)
 				_messagesViewModel.splice(foundIndex, 1);
 			else

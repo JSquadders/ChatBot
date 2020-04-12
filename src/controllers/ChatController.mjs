@@ -3,10 +3,13 @@ import { ChatView } from '../views/ChatView';
 import { Bot } from '../models/Bot';
 
 export class ChatController {
-	constructor(id) {
-		this._chatModel = new ChatModel(id);
-		this._chatView = new ChatView(id);
-		this._id = id;
+	constructor(chatView) {
+		if (!(chatView instanceof ChatView))
+			throw `Invalid ChatView object: ${chatView}`;
+
+		this._id = chatView.id;
+		this._chatModel = new ChatModel(chatView.id);
+		this._chatView = chatView;
 	}
 
 	get id() {
@@ -23,11 +26,7 @@ export class ChatController {
 
 	async update() {
 		if (await this.hasNewMessage()) {
-			let newMessages = await this.popNewMessages();
-
-			console.log('newMessages', newMessages);
-			newMessages.forEach(message => this.addMessageToBeRead(message.text));
-			
+			(await this.popNewMessages()).forEach(message => this.addMessageToBeRead(message.text));			
 			await this.reply();
 			this.popMessagesToBeSent().forEach(message => this.postMessage(message));
 		}
