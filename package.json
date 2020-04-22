@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/JSquadders/ChatBot#readme",
   "files": [
-    "bundle.min.mjs"
+    "src/jsquadbot.min.mjs"
   ],
   "private": true,
   "devDependencies": {

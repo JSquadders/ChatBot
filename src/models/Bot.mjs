@@ -1,4 +1,4 @@
-import { BotAPI } from '../services/BotAPI';
+import {BotAPI} from '../services/BotAPI';
 
 export class Bot {
 	constructor(name) {

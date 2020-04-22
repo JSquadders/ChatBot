@@ -1,11 +1,11 @@
-import { ChatModel } from '../models/ChatModel';
-import { ChatView } from '../views/ChatView';
-import { Bot } from '../models/Bot';
+import {ChatModel} from '../models/ChatModel';
+import {ChatView} from '../views/ChatView';
+import {Bot} from '../models/Bot';
 
 export class ChatController {
 	constructor(chatView) {
 		if (!(chatView instanceof ChatView))
-			throw `Invalid ChatView object: ${chatView}`;
+			throw new TypeError(`Invalid ChatView object: ${chatView}`);
 
 		this._id = chatView.id;
 		this._chatModel = new ChatModel(chatView.id);
@@ -26,27 +26,22 @@ export class ChatController {
 
 	async update() {
 		if (await this.hasNewMessage()) {
-			(await this.popNewMessages()).forEach(message => this.addMessageToBeRead(message.text));			
+			(await this.popNewMessages()).forEach(msg => this.addMessageToBeRead(msg.text));			
 			await this.reply();
-			this.popMessagesToBeSent().forEach(message => this.postMessage(message));
+			this.popMessagesToBeSent().forEach(msg => this.postMessage(msg));
 		}
 	}
 
-	// @todo Ambiguous with getMessages(). Give it a better name
-	messages() {
-		return this._chatModel.messages();
-	}
-
-	postMessage(message) {
-		return this._chatView.postMessage(message);
+	postMessage(msg) {
+		return this._chatView.postMessage(msg);
 	}
 	
 	popNewMessages() {
 		return this._chatView.popNewMessages();
 	}
 
-	addMessageToBeRead(message) {
-		return this._chatModel.addMessageToBeRead(message);
+	addMessageToBeRead(msg) {
+		return this._chatModel.addMessageToBeRead(msg);
 	}
 
 	reply() {

@@ -3,13 +3,13 @@ import { terser } from 'rollup-plugin-terser';
 import { eslint } from 'rollup-plugin-eslint';
 
 let output = [{
-	file: 'jsquadbot.mjs',
+	file: 'src/jsquadbot.mjs',
 	format: 'esm'
 }];
 
 if (process.env.RELEASE) {
 	output.push({
-		file: 'jsquadbot.min.mjs',
+		file: 'src/jsquadbot.min.mjs',
 		format: 'esm',
 		plugins: [
 			terser({
@@ -22,7 +22,7 @@ if (process.env.RELEASE) {
 }
 
 export default {
-	input: 'loader.mjs',
+	input: 'src/loader.mjs',
 	plugins: [
 		eslint()
 	],

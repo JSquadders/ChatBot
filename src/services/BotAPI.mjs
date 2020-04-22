@@ -1,4 +1,4 @@
-import { Cryptography } from '../helpers/Cryptography';
+import {Cryptography} from '../helpers/Cryptography';
 
 export class BotAPI {
 	constructor() {
@@ -18,17 +18,17 @@ export class BotAPI {
 		this._messages = [];
 	}
 
-	postMessage(message) {
+	postMessage(msg) {
 		return new Promise((resolve) => {
-			message = message[0].toUpperCase() + message.slice(1);
-			this._messages.push(message);
+			msg = msg[0].toUpperCase() + msg.slice(1);
+			this._messages.push(msg);
 
 			let icognocheck = '';
 			let xhr = new XMLHttpRequest();
 			xhr.withCredentials = true;
 			
 			// 88.202.181.104:443
-			let url = 'https://www.' + 'c' + 'l' + 'ev' + 'er' + 'bot.com/' + 'webservice' + 'min?uc=UseOfficial' + 'C' + 'l' + 'e' + 'ver' + 'bot' + 'API&';
+			let url = 'https://www.' + 'clever' + 'bot.com/' + 'webservice' + 'min?uc=UseOfficial' + 'Clever' + 'bot' + 'API&';
 			
 			if (this._sessionID)
 				url.concat(`out=${!!this._messages[this._messages.length - 2] ? Cryptography.messageEncode(this._messages[this._messages.length - 2]) : ''}&in=${Cryptography.messageEncode(this._messages[this._messages.length - 1])}&bot=c&cbsid=${this._sessionID}&xai=${this._sessionID.substr(0, 3)},${this._XAI}&ns=${this._ns++}&al=&dl=${this.language}&flag=&user=&mode=1&alt=0&reac=&emo=&sou=website&xed=&`);

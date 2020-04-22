@@ -28,17 +28,17 @@ export class ChatModel {
 		return [...this._messages];
 	}
 
-	addMessageToBeRead(message) {
-		if (message) {
-			this._messagesToBeRead.push(message);
-			return this._messages.push(message);
+	addMessageToBeRead(msg) {
+		if (msg) {
+			this._messagesToBeRead.push(msg);
+			return this._messages.push(msg);
 		}
 	}
 
-	addMessageToBeSent(message) {
-		if (message) {
-			this._messagesToBeSent.push(message);
-			return this._messages.push(message);
+	addMessageToBeSent(msg) {
+		if (msg) {
+			this._messagesToBeSent.push(msg);
+			return this._messages.push(msg);
 		}
 	}
 
@@ -55,20 +55,18 @@ export class ChatModel {
 	reply() {
 		return new Promise(async (resolve) => {
 			for (let bot of this._bots.values()) {
-				this._messagesToBeRead.forEach(receivedMessage => {
-					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMessage)) {
+				this._messagesToBeRead.forEach(receivedMsg => {
+					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMsg)) {
 						// @todo Implement [bot:stop]
-						if (receivedMessage.includes('[```' + bot.name + '```:reset]'))
+						if (receivedMsg.includes('[```' + bot.name + '```:reset]'))
 							return bot.clearMessagesToBeRead();
-						else if (receivedMessage.includes('[```' + bot.name + '```:listening]'))
+						else if (receivedMsg.includes('[```' + bot.name + '```:listening]'))
 							return;
-						receivedMessage = receivedMessage.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b`, 'i'), '').replace(/^\W+/, '');
-						if (/[a-z|\d]\s*$/i.test(receivedMessage))
-							receivedMessage += '.';
+						receivedMsg = receivedMsg.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b`, 'i'), '').replace(/^\W+/, '');
+						if (/[a-z|\d]\s*$/i.test(receivedMsg))
+							receivedMsg += '.';
+						bot.addMessageToBeRead(receivedMsg);
 					}
-
-					if (receivedMessage.length > 1)
-						bot.addMessageToBeRead(receivedMessage);
 				});
 			}
 

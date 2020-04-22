@@ -10,9 +10,13 @@ Another advantage from the MVVM approach is that you can use only the functional
 
 ## Usage
 
-1. Install an extension to disable CORS in your browser, like _CORS Everywhere_.
+1. Install an extension to skip CORS in your browser, like _CORS Everywhere_.
 
-1. Open a new tab in your browser and access the ```clever bot``` website. That's so your browser can load the required cookies.
+1. Disable CSP. In Firefox, go to `about:config` and disable the option `security.csp.enable`.
+
+	![Disable CSP](./docs/firefox-csp.png)
+
+1. Open a new tab in your browser and access the `clever bot` website. That's so your browser can load the required cookies.
 
 1. Inject all the code from `jsquadbot.min.mjs` into the webpage. There are several ways to do that. The most straightforward one is to just copy and paste it into the browser console. Another way is to use a browser extension that allows JS code to be injected automatically.
 
@@ -35,5 +39,5 @@ await chat.update();
 
 ```javascript
 let view = new ChatViewWhatsApp('Bob');
-await view.postMessage('Hello Bob!'); // sends message to Bob
+await view.postMessage('Hello!'); // sends message to Bob
 ```

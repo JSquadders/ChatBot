@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { MessagesViewModel } from './viewmodels/MessagesViewModel';
-import { MessageViewModel } from './viewmodels/MessageViewModel';
+import {MessagesViewModel} from './viewmodels/MessagesViewModel';
+import {MessageViewModel} from './viewmodels/MessageViewModel';
 /* eslint-enable no-unused-vars */
 
 export class ChatView {
@@ -35,7 +35,7 @@ export class ChatView {
 	querySelectorAll(selector, interval, fulfillmentCallback = (timeElapsed, currentElements, previousElements) => ((currentElements.length || timeElapsed >= 3000) ? currentElements : false), rootElement = document) {
 		/* eslint-enable no-unused-vars */
 		return new Promise((resolve) => {
-			let result = [], currentElements, previousElements = null, timeElapsed = 0;
+			let result = [], currentElements, previousElements = [], timeElapsed = 0;
 			
 			(function _querySelectorAll() {
 				currentElements = rootElement.querySelectorAll(selector);
@@ -51,8 +51,9 @@ export class ChatView {
 	/* eslint-enable no-cond-assign */
 
 	hasNewMessage() {
+		console.log('Checking for new messages');
 		return new Promise(async (resolve) => {
-			let oldMessagesJSON = this._messagesViewModel.map(messageViewModel => JSON.stringify(messageViewModel));
+			let oldMessagesJSON = this._messagesViewModel.map(JSON.stringify);
 			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.date >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
 		});
 	}
@@ -67,16 +68,12 @@ export class ChatView {
 	}
 
 	/* eslint-disable no-unused-vars */
-	async postMessage(message) {
+	async postMessage(msg) {
 		/* eslint-enable no-unused-vars */
 		throw 'async postMessage() must be implemented.';
 	}
 	
 	async getMessages() {
 		throw 'async getMessages() must be implemented.';
-	}
-
-	async switch() {
-		throw 'async switch() must be implemented.';
 	}
 }
