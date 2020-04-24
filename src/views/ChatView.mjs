@@ -19,7 +19,7 @@ export class ChatView {
 		return new Promise((resolve) => {
 			let result = [], currentElement, previousElement = null, timeElapsed = 0;
 			
-			(function _querySelector() {
+			void function _querySelector() {
 				currentElement = rootElement.querySelector(selector);
 				if (result = fulfillmentCallback(timeElapsed += +interval, currentElement, (previousElement || currentElement))) {
 					resolve((result === true) ? null : result);
@@ -27,7 +27,7 @@ export class ChatView {
 					previousElement = currentElement;
 					setTimeout(_querySelector, interval);
 				}
-			})();
+			}();
 		});
 	}
 
@@ -37,7 +37,7 @@ export class ChatView {
 		return new Promise((resolve) => {
 			let result = [], currentElements, previousElements = [], timeElapsed = 0;
 			
-			(function _querySelectorAll() {
+			void function _querySelectorAll() {
 				currentElements = rootElement.querySelectorAll(selector);
 				if (result = fulfillmentCallback(timeElapsed += +interval, currentElements, (previousElements || currentElements))) {
 					resolve(result);
@@ -45,7 +45,7 @@ export class ChatView {
 					previousElements = currentElements;
 					setTimeout(_querySelectorAll, interval);
 				}
-			})();
+			}();
 		});
 	}
 	/* eslint-enable no-cond-assign */
@@ -53,12 +53,12 @@ export class ChatView {
 	hasNewMessage() {
 		console.log('Checking for new messages');
 		return new Promise(async (resolve) => {
-			let oldMessagesJSON = this._messagesViewModel.map(JSON.stringify);
-			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.date >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
+			resolve((await this.getMessages()).reverse().some(msgViewModel => (this._messagesViewModel.has(msgViewModel) ? false : (console.log('New message', msgViewModel), true))));
 		});
 	}
 
 	popNewMessages() {
+		console.log('Popping new messages');
 		return new Promise(async (resolve) => {
 			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
 			console.log('New messages', newMessages);

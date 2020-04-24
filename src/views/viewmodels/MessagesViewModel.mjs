@@ -14,16 +14,16 @@ export class MessagesViewModel extends Array {
 		return false;
 	}
 
+	has(msgViewModel) {
+		return this.some(mvm => mvm.equals(msgViewModel));
+	}
+
 	remove(msgsViewModel) {
-		let result = [];
-		let _messagesViewModel = [...msgsViewModel];
-		this.forEach(thisMsgViewModel => {
-			let foundIndex = _messagesViewModel.findIndex(msgViewModel => (thisMsgViewModel.author === msgViewModel.author) && (thisMsgViewModel.text === msgViewModel.text) && (Math.abs(thisMsgViewModel.date - msgViewModel.date) <= 60000));
-			if (foundIndex > -1)
-				_messagesViewModel.splice(foundIndex, 1);
-			else
-				result.push(thisMsgViewModel);
+		let mvmsToRemove = [...msgsViewModel];
+		return this.filter(msgViewModel => {
+			let index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
+			if (index > -1) mvmsToRemove.splice(index, 1);
+			return (index == -1);
 		});
-		return result;
 	}
 }

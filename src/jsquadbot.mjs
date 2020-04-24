@@ -14,28 +14,32 @@ class MessagesViewModel extends Array {
 		return false;
 	}
 
+	has(msgViewModel) {
+		return this.some(mvm => mvm.equals(msgViewModel));
+	}
+
 	remove(msgsViewModel) {
-		let result = [];
-		let _messagesViewModel = [...msgsViewModel];
-		this.forEach(thisMsgViewModel => {
-			let foundIndex = _messagesViewModel.findIndex(msgViewModel => (thisMsgViewModel.author === msgViewModel.author) && (thisMsgViewModel.text === msgViewModel.text) && (Math.abs(thisMsgViewModel.date - msgViewModel.date) <= 60000));
-			if (foundIndex > -1)
-				_messagesViewModel.splice(foundIndex, 1);
-			else
-				result.push(thisMsgViewModel);
+		let mvmsToRemove = [...msgsViewModel];
+		return this.filter(msgViewModel => {
+			let index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
+			if (index > -1) mvmsToRemove.splice(index, 1);
+			return (index == -1);
 		});
-		return result;
 	}
 }
 
 class MessageViewModel {
 	constructor(author, text, date) {
-		if (!author || !text || !date)
+		if (!author || !text || !(date instanceof Date))
 			throw `Could not create a MessageViewModel with author "${author}", text "${text}" and date "${date}"`;
 
 		this._author = author;
 		this._text = text;
 		this._date = date;
+	}
+
+	equals(msgViewModel) {
+		return ((this.author == msgViewModel.author) && (this.text == msgViewModel.text) && (this.date.valueOf() == msgViewModel.date.valueOf()));
 	}
 
 	get date() {
@@ -82,7 +86,7 @@ class ChatView {
 		return new Promise((resolve) => {
 			let result = [], currentElement, previousElement = null, timeElapsed = 0;
 			
-			(function _querySelector() {
+			void function _querySelector() {
 				currentElement = rootElement.querySelector(selector);
 				if (result = fulfillmentCallback(timeElapsed += +interval, currentElement, (previousElement || currentElement))) {
 					resolve((result === true) ? null : result);
@@ -90,7 +94,7 @@ class ChatView {
 					previousElement = currentElement;
 					setTimeout(_querySelector, interval);
 				}
-			})();
+			}();
 		});
 	}
 
@@ -100,7 +104,7 @@ class ChatView {
 		return new Promise((resolve) => {
 			let result = [], currentElements, previousElements = [], timeElapsed = 0;
 			
-			(function _querySelectorAll() {
+			void function _querySelectorAll() {
 				currentElements = rootElement.querySelectorAll(selector);
 				if (result = fulfillmentCallback(timeElapsed += +interval, currentElements, (previousElements || currentElements))) {
 					resolve(result);
@@ -108,7 +112,7 @@ class ChatView {
 					previousElements = currentElements;
 					setTimeout(_querySelectorAll, interval);
 				}
-			})();
+			}();
 		});
 	}
 	/* eslint-enable no-cond-assign */
@@ -116,12 +120,12 @@ class ChatView {
 	hasNewMessage() {
 		console.log('Checking for new messages');
 		return new Promise(async (resolve) => {
-			let oldMessagesJSON = this._messagesViewModel.map(JSON.stringify);
-			resolve(!!(await this.getMessages()).filter(messageViewModel => (messageViewModel.date >= this._messagesViewModel.lastChecked && !oldMessagesJSON.includes(JSON.stringify(messageViewModel)))).length);
+			resolve((await this.getMessages()).reverse().some(msgViewModel => (this._messagesViewModel.has(msgViewModel) ? false : (console.log('New message', msgViewModel), true))));
 		});
 	}
 
 	popNewMessages() {
+		console.log('Popping new messages');
 		return new Promise(async (resolve) => {
 			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
 			console.log('New messages', newMessages);
