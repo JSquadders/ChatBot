@@ -120,7 +120,7 @@ class ChatView {
 	hasNewMessage() {
 		console.log('Checking for new messages');
 		return new Promise(async (resolve) => {
-			resolve((await this.getMessages()).reverse().some(msgViewModel => (this._messagesViewModel.has(msgViewModel) ? false : (console.log('New message', msgViewModel), true))));
+			resolve(!!(await this.getMessages()).remove(this._messagesViewModel).length);
 		});
 	}
 
