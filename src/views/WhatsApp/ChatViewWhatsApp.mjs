@@ -24,20 +24,20 @@ export class ChatViewWhatsApp extends ChatView {
 		if (msgDiv.querySelector('img')) throw 'Tried to parse a message with an emoji';
 		if (msgDiv.querySelector('._3CVlE')) throw 'Tried to parse a reply message';
 
-		let author = data.substr(0, data.length - 2).split('] ')[1];
-		let text = [...msgDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
+		const author = data.substr(0, data.length - 2).split('] ')[1];
+		const text = [...msgDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
 			let node = element.nodeValue;
 			if (!node && (node !== '') && element.dataset.appTextTemplate) {
-				let template = element.dataset.appTextTemplate;
-				let decoration = template.substr(0, template.indexOf('$'));
+				const template = element.dataset.appTextTemplate;
+				const decoration = template.substr(0, template.indexOf('$'));
 				node = decoration + element.textContent + decoration;
 			}
 			return (node ? finalText.concat(node) : finalText);
 		}, '');
 
 		data = [...data.matchAll(/\d+/g)];
-		let date = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
-		let message = new MessageViewModel(author, text, date);
+		const date = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
+		const message = new MessageViewModel(author, text, date);
 		return message;
 	}
 
@@ -55,25 +55,6 @@ export class ChatViewWhatsApp extends ChatView {
 		input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, view: window}));
 		console.log('Clicking send button');
 		(await this.querySelector('button._35EW6', 1000)).click();
-
-		let now = new Date();
-		let myMessage = await this.querySelectorAll('div.message-out:nth-last-child(-n+5) div[data-pre-plain-text]', 1000, (timeElapsed, msgDivs) => {
-			console.log('Retrieving message just sent');
-			if (timeElapsed >= 5000)
-				return msgDivs;
-			for	(let i = msgDivs.length - 1; i >= 0; i--) {
-				if (!msgDivs[i].querySelector('._3CVlE') && !msgDivs[i].querySelector('img')) {
-					let messageViewModel = this.parseMessage(msgDivs[i]);
-					if (msg === messageViewModel.text && (now - messageViewModel.date <= 60000))
-						return messageViewModel;
-				}
-			}
-			return false;
-		});
-		
-		console.log('Message sent', myMessage);		
-		if (!!myMessage)
-			this._messagesViewModel.push(myMessage);
 	}
 
 	async getMessages() {

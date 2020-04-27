@@ -54,7 +54,7 @@ export class ChatController {
 
 	async addBot(botName) {
 		this._chatModel.addBot(new Bot(botName));
-		await this._chatView.postMessage('```[' + botName + ':reset]```');
-		await this._chatView.postMessage('```[' + botName + ':listening]```');
+		await this._chatView.postMessage(`[${botName}:reset]`);
+		await this._chatView.postMessage(`[${botName}:listening]`);
 	}
 }

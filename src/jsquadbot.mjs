@@ -21,7 +21,7 @@ class MessagesViewModel extends Array {
 	remove(msgsViewModel) {
 		let mvmsToRemove = [...msgsViewModel];
 		return this.filter(msgViewModel => {
-			let index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
+			const index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
 			if (index > -1) mvmsToRemove.splice(index, 1);
 			return (index == -1);
 		});
@@ -127,7 +127,7 @@ class ChatView {
 	popNewMessages() {
 		console.log('Popping new messages');
 		return new Promise(async (resolve) => {
-			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
+			const newMessages = (await this.getMessages()).remove(this._messagesViewModel);
 			console.log('New messages', newMessages);
 			newMessages.forEach(newMessage => this._messagesViewModel.push(newMessage));
 			resolve(newMessages);
@@ -167,20 +167,20 @@ class ChatViewWhatsApp extends ChatView {
 		if (msgDiv.querySelector('img')) throw 'Tried to parse a message with an emoji';
 		if (msgDiv.querySelector('._3CVlE')) throw 'Tried to parse a reply message';
 
-		let author = data.substr(0, data.length - 2).split('] ')[1];
-		let text = [...msgDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
+		const author = data.substr(0, data.length - 2).split('] ')[1];
+		const text = [...msgDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
 			let node = element.nodeValue;
 			if (!node && (node !== '') && element.dataset.appTextTemplate) {
-				let template = element.dataset.appTextTemplate;
-				let decoration = template.substr(0, template.indexOf('$'));
+				const template = element.dataset.appTextTemplate;
+				const decoration = template.substr(0, template.indexOf('$'));
 				node = decoration + element.textContent + decoration;
 			}
 			return (node ? finalText.concat(node) : finalText);
 		}, '');
 
 		data = [...data.matchAll(/\d+/g)];
-		let date = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
-		let message = new MessageViewModel(author, text, date);
+		const date = new Date(data[4], data[2] - 1, data[3], data[0], data[1]);
+		const message = new MessageViewModel(author, text, date);
 		return message;
 	}
 
@@ -198,25 +198,6 @@ class ChatViewWhatsApp extends ChatView {
 		input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, view: window}));
 		console.log('Clicking send button');
 		(await this.querySelector('button._35EW6', 1000)).click();
-
-		let now = new Date();
-		let myMessage = await this.querySelectorAll('div.message-out:nth-last-child(-n+5) div[data-pre-plain-text]', 1000, (timeElapsed, msgDivs) => {
-			console.log('Retrieving message just sent');
-			if (timeElapsed >= 5000)
-				return msgDivs;
-			for	(let i = msgDivs.length - 1; i >= 0; i--) {
-				if (!msgDivs[i].querySelector('._3CVlE') && !msgDivs[i].querySelector('img')) {
-					let messageViewModel = this.parseMessage(msgDivs[i]);
-					if (msg === messageViewModel.text && (now - messageViewModel.date <= 60000))
-						return messageViewModel;
-				}
-			}
-			return false;
-		});
-		
-		console.log('Message sent', myMessage);		
-		if (!!myMessage)
-			this._messagesViewModel.push(myMessage);
 	}
 
 	async getMessages() {
@@ -420,8 +401,7 @@ class BotAPI {
 			msg = msg[0].toUpperCase() + msg.slice(1);
 			this._messages.push(msg);
 
-			let icognocheck = '';
-			let xhr = new XMLHttpRequest();
+			const xhr = new XMLHttpRequest();
 			xhr.withCredentials = true;
 			
 			// 88.202.181.104:443
@@ -441,8 +421,8 @@ class BotAPI {
 				resolve(response[0]);
 			};
 		
-			let stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
-			icognocheck = Cryptography.md5(stimulus.substring(7, 33));
+			const stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
+			const icognocheck = Cryptography.md5(stimulus.substring(7, 33));
 			
 			console.log('Payload: ', stimulus);
 			xhr.send(stimulus + '&icognocheck=' + icognocheck);
@@ -453,10 +433,7 @@ class BotAPI {
 class Bot {
 	constructor(name) {
 		this._name = name;
-
-		// estes 2 arrays não precisariam ser arrays, apenas string. Estão sendo mantidos como array para facilitar caso futuramente seja alterado o comportamento do bot
-		this._messagesToBeRead = [];
-		this._messagesToBeSent = [];
+		this._messagesToBeRead = [], this._messagesToBeSent = [];
 		this._api = new BotAPI();
 	}
 
@@ -474,7 +451,7 @@ class Bot {
 	
 	addMessageToBeSent(msg) {
 		this._sent = false;
-		return this._messagesToBeSent.push('```[' + this.name + ']``` ' + msg);
+		return this._messagesToBeSent.push(`[${this.name}] ${msg}`);
 	}
 
 	clearMessagesToBeSent() {
@@ -512,9 +489,7 @@ class Bot {
 class ChatModel {
 	constructor(id) {
 		this._id = id;
-		this._messages = [];
-		this._messagesToBeRead = [];
-		this._messagesToBeSent = [];
+		this._messages = [], this._messagesToBeRead = [],	this._messagesToBeSent = [];
 		this._bots = new Map();
 	}
 	
@@ -522,7 +497,6 @@ class ChatModel {
 		return this._bots;
 	}
 
-	// @todo Probably not needed anymore as bots are exposed
 	addBot(bot) {
 		this._bots.set(bot.name, bot);
 	}
@@ -569,10 +543,11 @@ class ChatModel {
 				this._messagesToBeRead.forEach(receivedMsg => {
 					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMsg)) {
 						// @todo Implement [bot:stop]
-						if (receivedMsg.includes('[```' + bot.name + '```:reset]'))
+						if (receivedMsg.includes(`[${bot.name}:reset]`))
 							return bot.clearMessagesToBeRead();
-						else if (receivedMsg.includes('[```' + bot.name + '```:listening]'))
+						else if (receivedMsg.includes(`[${bot.name}`))
 							return;
+
 						receivedMsg = receivedMsg.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b`, 'i'), '').replace(/^\W+/, '');
 						if (/[a-z|\d]\s*$/i.test(receivedMsg))
 							receivedMsg += '.';
@@ -580,7 +555,6 @@ class ChatModel {
 					}
 				});
 			}
-
 			this.clearMessagesToBeRead();			
 
 			await Promise.all([...this._bots.values()].map(bot => bot.reply()));
@@ -647,8 +621,8 @@ class ChatController {
 
 	async addBot(botName) {
 		this._chatModel.addBot(new Bot(botName));
-		await this._chatView.postMessage('```[' + botName + ':reset]```');
-		await this._chatView.postMessage('```[' + botName + ':listening]```');
+		await this._chatView.postMessage(`[${botName}:reset]`);
+		await this._chatView.postMessage(`[${botName}:listening]`);
 	}
 }
 
@@ -659,16 +633,21 @@ class ChatControllerMap extends Map {
 		this._refreshInterval = 6000;
 	}
 
+	set(...args) {
+		if (args.length === 1) super.set(args[0].id, args[0]);
+		else super.set(args[0], args[1]);
+	}
+
 	async listen() {
 		this._timeoutID = true;
 		
-		(async function _listen() {
+		void async function _listen() {
 			console.log('Checking messages');
 			await this.update();
 
 			if (this._timeoutID)
 				this._timeoutID = setTimeout(_listen.bind(this), this._refreshInterval);
-		}).bind(this)();
+		}.bind(this)();
 	}
 
 	stop() {

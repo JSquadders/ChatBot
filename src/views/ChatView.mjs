@@ -60,7 +60,7 @@ export class ChatView {
 	popNewMessages() {
 		console.log('Popping new messages');
 		return new Promise(async (resolve) => {
-			let newMessages = (await this.getMessages()).remove(this._messagesViewModel);
+			const newMessages = (await this.getMessages()).remove(this._messagesViewModel);
 			console.log('New messages', newMessages);
 			newMessages.forEach(newMessage => this._messagesViewModel.push(newMessage));
 			resolve(newMessages);

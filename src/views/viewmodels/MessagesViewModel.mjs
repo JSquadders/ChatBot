@@ -21,7 +21,7 @@ export class MessagesViewModel extends Array {
 	remove(msgsViewModel) {
 		let mvmsToRemove = [...msgsViewModel];
 		return this.filter(msgViewModel => {
-			let index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
+			const index = mvmsToRemove.findIndex(mvmToRemove => msgViewModel.equals(mvmToRemove));
 			if (index > -1) mvmsToRemove.splice(index, 1);
 			return (index == -1);
 		});

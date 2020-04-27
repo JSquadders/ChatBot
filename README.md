@@ -22,21 +22,54 @@ Another advantage from the MVVM approach is that you can use only the functional
 
 The injected code does nothing until it's actually called. See the examples below.
 
-### Example
+### Examples
 
+#### Step by step
 ```javascript
-let chat = new ChatController(new ChatViewWhatsApp('Eliza'));
+let cv = new ChatViewWhatsApp('Eliza');
 // "Eliza" is the name of the contact or group you want to attach the bot to.
+// This class takes care of DOM handling
 
-await chat.addBot('HAL');
-// add a bot named "HAL" to the conversation with "Eliza".
+let cc = new ChatController(cv);
+// This class handles the View.
 
-await chat.update();
-// bot will read and answer messages that contain its name.
+await cc.addBot('HAL')
+// Add a bot named "HAL" to the conversation with "Eliza".
+
+let ccm = new ChatControllerMap(cc);
+// This class handles all the chats passed to it, including their bots.
+// There must be only 1 instance of ChatControllerMap, otherwise there will be concurrency problems
+
+await ccm.listen();
+// Bot will start reading and answering messages that contain its name periodically.
 ```
 
-### Using the lib for other purposes
+#### Short version
+```javascript
+let ccm = new ChatControllerMap(new ChatController(new ChatViewWhatsApp('Eliza')));
+await ccm.get('Eliza').addBot('HAL');
+await ccm.listen();
+```
 
+#### Multiple bots and chats
+```javascript
+let cc1 = new ChatController(new ChatViewWhatsApp('Eliza'));
+await cc1.addBot('HAL');
+await cc1.addBot('Siri'); // second bot
+
+let cc2 = new ChatController(new ChatViewWhatsApp('Alice')); // another chat
+await cc2.addBot('Cortana'); // another bot
+
+let ccm = new ChatControllerMap(cc1, cc2); // add both chats at once
+await ccm.listen(); // all 3 bots starts listening
+
+let cc3 = new ChatController(new ChatViewWhatsApp('Bob')); // yet another chat
+await cc3.addBot('Terminator');
+
+ccm.set(cc3); // add chat to previously created ChatControllerMap to start listening
+```
+
+#### Using the lib for other purposes
 ```javascript
 let view = new ChatViewWhatsApp('Bob');
 await view.postMessage('Hello!'); // sends message to Bob

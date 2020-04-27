@@ -1,9 +1,7 @@
 export class ChatModel {
 	constructor(id) {
 		this._id = id;
-		this._messages = [];
-		this._messagesToBeRead = [];
-		this._messagesToBeSent = [];
+		this._messages = [], this._messagesToBeRead = [],	this._messagesToBeSent = [];
 		this._bots = new Map();
 	}
 	
@@ -11,7 +9,6 @@ export class ChatModel {
 		return this._bots;
 	}
 
-	// @todo Probably not needed anymore as bots are exposed
 	addBot(bot) {
 		this._bots.set(bot.name, bot);
 	}
@@ -58,10 +55,11 @@ export class ChatModel {
 				this._messagesToBeRead.forEach(receivedMsg => {
 					if (new RegExp(`\\b${bot.name}\\b`, 'i').test(receivedMsg)) {
 						// @todo Implement [bot:stop]
-						if (receivedMsg.includes('[```' + bot.name + '```:reset]'))
+						if (receivedMsg.includes(`[${bot.name}:reset]`))
 							return bot.clearMessagesToBeRead();
-						else if (receivedMsg.includes('[```' + bot.name + '```:listening]'))
+						else if (receivedMsg.includes(`[${bot.name}`))
 							return;
+
 						receivedMsg = receivedMsg.replace(new RegExp(`[^a-z|\\d|\\u00E0-\\u00FC]*\\b${bot.name}\\b`, 'i'), '').replace(/^\W+/, '');
 						if (/[a-z|\d]\s*$/i.test(receivedMsg))
 							receivedMsg += '.';
@@ -69,7 +67,6 @@ export class ChatModel {
 					}
 				});
 			}
-
 			this.clearMessagesToBeRead();			
 
 			await Promise.all([...this._bots.values()].map(bot => bot.reply()));

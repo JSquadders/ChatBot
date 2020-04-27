@@ -23,8 +23,7 @@ export class BotAPI {
 			msg = msg[0].toUpperCase() + msg.slice(1);
 			this._messages.push(msg);
 
-			let icognocheck = '';
-			let xhr = new XMLHttpRequest();
+			const xhr = new XMLHttpRequest();
 			xhr.withCredentials = true;
 			
 			// 88.202.181.104:443
@@ -44,8 +43,8 @@ export class BotAPI {
 				resolve(response[0]);
 			};
 		
-			let stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
-			icognocheck = Cryptography.md5(stimulus.substring(7, 33));
+			const stimulus = `stimulus=${[...this._messages].reverse().map((msg, index) => `${index ? `vText${index+1}=` : ''}${Cryptography.messageEncode(msg)}`).join('&')}&cb_settings_language=${this.language}&cb_settings_scripting=no&sessionid=${this._sessionID}&islearning=1&icognoid=wsf`;
+			const icognocheck = Cryptography.md5(stimulus.substring(7, 33));
 			
 			console.log('Payload: ', stimulus);
 			xhr.send(stimulus + '&icognocheck=' + icognocheck);
