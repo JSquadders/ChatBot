@@ -1,4 +1,4 @@
-# [WIP] JSquadBot
+# JSquadBot
 
 Automation-based chatbot that is able to read and answer messages from a browser-based chat such as WebWhatsApp.
 

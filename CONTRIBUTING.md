@@ -1,11 +1,11 @@
 ## Building
 
-### `npm run build`
+#### `npm run build`
 Creates a non-minified bundle at `src/jsquadbot.mjs`.
 
 It has many useful `console.log` for debugging.
 
-### `npm prepare`
+#### `npm prepare`
 Creates both a minified bundle at `src/jsquadbot.min.mjs` and a non-minified bundle as well.
 
 It strips out all `console.log` in the minified bundle.
