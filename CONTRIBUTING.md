@@ -11,7 +11,7 @@ Creates both a minified bundle at `src/jsquadbot.min.mjs` and a non-minified bun
 It strips out all `console.log` in the minified bundle.
 
 ## Porting the chatbot to a new chat
-To add support to a new chat - such as Facebook Messenger or Slack -, all you have to do is to extend the [ChatView](./src/views/ChatView.mjs) class and implement the "abstract" methods described below.
+To add support to a new chat - such as Facebook Messenger or Slack -, you have to extend the [ChatView](./src/views/ChatView.mjs) class, implement the "abstract" methods described below and then add your class to the [loader.mjs](./src/loader.mjs) so that it's included in the bundles.
 
 Then, to use the Chatbot in the new chat, you just have to instantiate your own extended `ChatView` in place of the base one.
 
@@ -21,7 +21,7 @@ Then, to use the Chatbot in the new chat, you just have to instantiate your own 
 	Returns a [MessagesViewModel](./src/views/viewmodels/MessagesViewModel.mjs) with all the messages, both read and unread.
 
 1. #### `async postMessage(message)`
-	Posts message to the conversation the View is attached to.
+	Posts the message (string) to the conversation the View is attached to.
 
 ### Helper methods
 The methods below can be used straight from the base class, without "overriding".
