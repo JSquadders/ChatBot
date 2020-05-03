@@ -1,4 +1,4 @@
-export class ChatModel {
+export default class ChatModel {
 	constructor(id) {
 		this._id = id;
 		this._messages = [], this._messagesToBeRead = [],	this._messagesToBeSent = [];

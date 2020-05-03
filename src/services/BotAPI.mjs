@@ -1,6 +1,6 @@
-import {Cryptography} from '../helpers/Cryptography';
+import Cryptography from '../helpers/Cryptography';
 
-export class BotAPI {
+export default class BotAPI {
 	constructor() {
 		this._sessionID;
 		this._XAI;

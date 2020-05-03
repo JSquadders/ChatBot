@@ -1,8 +1,8 @@
-import {ChatView} from '../ChatView';
-import {MessagesViewModel} from '../viewmodels/MessagesViewModel';
-import {MessageViewModel} from '../viewmodels/MessageViewModel';
+import ChatView from '../ChatView';
+import MessagesViewModel from '../viewmodels/MessagesViewModel';
+import MessageViewModel from '../viewmodels/MessageViewModel';
 
-export class ChatViewWhatsApp extends ChatView {
+export default class ChatViewWhatsApp extends ChatView {
 	constructor(id) {
 		super(id);
 		this._messagesViewModel = new MessagesViewModel();
@@ -10,9 +10,9 @@ export class ChatViewWhatsApp extends ChatView {
 
 	async switch() {
 		console.log('Switching to chat');
-		document.querySelector(`span._1wjpf._3NFp9._3FXB1[title='${this._id}']`).dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+		document.querySelector(`span._1wjpf._3NFp9._3FXB1[title*='${this._id}']`).dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 		console.log('Waiting for page to load up');
-		await this.querySelector(`header span[title='${this.id}']`, 1000);
+		await this.querySelector(`header span[title*='${this.id}']`, 1000);
 		await this.querySelector('._3dGYA', 1000, (timeElapsed, currentElement) => ((timeElapsed >= 5000) || (currentElement.title === 'load earlier messages…')));
 		console.log('Loaded');
 	}

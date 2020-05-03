@@ -1,4 +1,4 @@
-export class MessageViewModel {
+export default class MessageViewModel {
 	constructor(author, text, date) {
 		if (!author || !text || !(date instanceof Date))
 			throw `Could not create a MessageViewModel with author "${author}", text "${text}" and date "${date}"`;

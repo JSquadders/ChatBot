@@ -1,4 +1,4 @@
-export class ChatControllerMap extends Map {
+class ChatControllerMap extends Map {
 	constructor(...chatControllers) {
 		super(chatControllers.map((chatController) => [chatController.id, chatController]));
 		this._timeoutID = null;
@@ -19,7 +19,7 @@ export class ChatControllerMap extends Map {
 
 			if (this._timeoutID)
 				this._timeoutID = setTimeout(_listen.bind(this), this._refreshInterval);
-		}.bind(this)();
+		}.call(this);
 	}
 
 	stop() {
@@ -54,3 +54,6 @@ export class ChatControllerMap extends Map {
 		return this._refreshInterval;
 	}
 }
+
+const chatControllerMap = new ChatControllerMap();
+export default chatControllerMap;

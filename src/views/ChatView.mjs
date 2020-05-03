@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import {MessagesViewModel} from './viewmodels/MessagesViewModel';
-import {MessageViewModel} from './viewmodels/MessageViewModel';
+import MessagesViewModel from './viewmodels/MessagesViewModel';
+import MessageViewModel from './viewmodels/MessageViewModel';
 /* eslint-enable no-unused-vars */
 
-export class ChatView {
+export default class ChatView {
 	constructor(id) {
 		this._id = id;
 	}

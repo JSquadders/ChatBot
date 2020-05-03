@@ -1,4 +1,4 @@
-export class MessagesViewModel extends Array {
+export default class MessagesViewModel extends Array {
 	constructor(...msgViewModels) {
 		super();
 		this.lastChecked = 0;

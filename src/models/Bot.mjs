@@ -1,6 +1,6 @@
-import {BotAPI} from '../services/BotAPI';
+import BotAPI from '../services/BotAPI';
 
-export class Bot {
+export default class Bot {
 	constructor(name) {
 		this._name = name;
 		this._messagesToBeRead = [], this._messagesToBeSent = [];

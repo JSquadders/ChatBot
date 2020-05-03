@@ -1,25 +1,32 @@
+## Building
+
+### `npm run build`
+Creates a non-minified bundle at `src/jsquadbot.mjs`.
+
+It has many useful `console.log` for debugging.
+
+### `npm prepare`
+Creates both a minified bundle at `src/jsquadbot.min.mjs` and a non-minified bundle as well.
+
+It strips out all `console.log` in the minified bundle.
+
 ## Porting the chatbot to a new chat
-To add support to a new chat - such as Facebook Messenger, Slack, among others -, all you have to do is to extend the [ChatView](./src/views/ChatView.mjs) class and implement the "abstract" methods described below.
+To add support to a new chat - such as Facebook Messenger or Slack -, all you have to do is to extend the [ChatView](./src/views/ChatView.mjs) class and implement the "abstract" methods described below.
 
 Then, to use the Chatbot in the new chat, you just have to instantiate your own extended `ChatView` in place of the base one.
 
------------------------
 ### Methods to implement
 
-1. #### _async_ getMessages()
+1. #### `async getMessages()`
 	Returns a [MessagesViewModel](./src/views/viewmodels/MessagesViewModel.mjs) with all the messages, both read and unread.
 
-1. #### _async_ postMessage(message)
+1. #### `async postMessage(message)`
 	Posts message to the conversation the View is attached to.
-
-	Usually, the message should also be added to `this._messagesViewModel` so that it's not considered new by the `hasNewMessage` method, otherwise the bot would answer itself.
-
------------------------
 
 ### Helper methods
 The methods below can be used straight from the base class, without "overriding".
 
-#### querySelector[All](selector, interval [, fulfillmentCallback(timeElapsed, currentElement[s], previousElement[s]), rootElement])
+#### `querySelector[All](selector, interval [, fulfillmentCallback(timeElapsed, currentElement[s], previousElement[s]), rootElement])`
 
 These are async `querySelector` and `querySelectorAll` with custom behavior that return a Promise. Their purpose is easing the handling of the async nature of the DOM.
 
@@ -33,7 +40,7 @@ These are async `querySelector` and `querySelectorAll` with custom behavior that
 Because the `interval` starts counting from the moment the previous callback finishes executing, there's no risk of truncating calls to `fulfillmentCallback` even if the interval is shorter than the time the function takes to execute.
 
 #### Example
-The code below calls `document.querySelector` with the `._3dGYA` CSS selector every `1000`ms until the `title` of the returned element is _"load earlier messages…"_, with a timeout of `5000`ms to make sure it doesn't produce an infinite loop.
+The code below calls `document.querySelector` with the `._3dGYA` CSS selector every `1000`ms until the `title` of the returned element is _"load earlier messages…"_, with a timeout of `5000`ms to make sure it doesn't result in an infinite loop.
 
 ```javascript
 let result = await this.querySelector('._3dGYA', 1000, (timeElapsed, currentElement) => {

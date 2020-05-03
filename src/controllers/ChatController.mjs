@@ -1,8 +1,8 @@
-import {ChatModel} from '../models/ChatModel';
-import {ChatView} from '../views/ChatView';
-import {Bot} from '../models/Bot';
+import ChatModel from '../models/ChatModel';
+import ChatView from '../views/ChatView';
+import Bot from '../models/Bot';
 
-export class ChatController {
+export default class ChatController {
 	constructor(chatView) {
 		if (!(chatView instanceof ChatView))
 			throw new TypeError(`Invalid ChatView object: ${chatView}`);
