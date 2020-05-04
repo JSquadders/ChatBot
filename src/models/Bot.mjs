@@ -1,12 +1,9 @@
-import { BotAPI } from '../services/BotAPI.mjs';
+import BotAPI from '../services/BotAPI';
 
-export class Bot {
+export default class Bot {
 	constructor(name) {
 		this._name = name;
-
-		// estes 2 arrays não precisariam ser arrays, apenas string. Estão sendo mantidos como array para facilitar caso futuramente seja alterado o comportamento do bot
-		this._messagesToBeRead = [];
-		this._messagesToBeSent = [];
+		this._messagesToBeRead = [], this._messagesToBeSent = [];
 		this._api = new BotAPI();
 	}
 
@@ -24,7 +21,7 @@ export class Bot {
 	
 	addMessageToBeSent(msg) {
 		this._sent = false;
-		return this._messagesToBeSent.push('```[' + this.name + ']``` ' + msg);
+		return this._messagesToBeSent.push(`[${this.name}] ${msg}`);
 	}
 
 	clearMessagesToBeSent() {
@@ -37,14 +34,12 @@ export class Bot {
 
 	reply() {
 		return new Promise((resolve) => {
-			console.log('Bot.reply()');
-			console.log(this.name + '_messagesToBeRead', this._messagesToBeRead);
 			if (!this._messagesToBeRead.length) {
 				resolve();
 				return;
 			}
 
-			// pega somente a última mensagem
+			// currently read only the last message
 			this._api.postMessage(this._messagesToBeRead[this._messagesToBeRead.length - 1])
 				.then(answer => {
 					this.addMessageToBeSent(answer);
