@@ -15,7 +15,8 @@ if (process.env.RELEASE) {
 			terser({
 				keep_classnames: true,
 				module: true,
-				compress: {defaults: false, drop_console: true}
+				compress: {defaults: false, drop_console: true},
+				mangle: {reserved: ['chatControllerMap']}
 			})
 		]
 	});

@@ -1,6 +1,6 @@
 {
   "name": "chatbot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Automation-based chatbot that is able to read and answer messages from a browser-based chat such as Web WhatsApp.",
   "author": "Leokuma",
   "license": "ISC",
