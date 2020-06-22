@@ -4,7 +4,7 @@ Automation-based chatbot that is able to read and answer messages from a browser
 
 It's not integrated directly with the chat API. Instead, it emulates the user in the browser and lets the webpage handle the requests. It was made like that not because it was the best approach, but for learning purposes.
 
-Only WhatsApp is supported out of the box, but, since it was developed in MVVM, it should be easy to make it work anywhere else. Basically, you only need to implement [these methods](./CONTRIBUTING.md#methods-to-implement), which are responsible for handling the DOM.
+**Only WhatsApp is supported out of the box**, but, since it was developed in MVVM, it should be easy to make it work anywhere else. Basically, you only need to implement [these methods](./CONTRIBUTING.md#methods-to-implement), which are responsible for handling the DOM.
 
 Another advantage from the MVVM approach is that you can use only the functionality that matters to you. For instance, you can take only the View layer and use it for a purpose other than a chatbot.
 
