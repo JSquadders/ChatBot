@@ -16,11 +16,11 @@ Another advantage from the MVVM approach is that you can use only the functional
 
 	![Disable CSP](./docs/firefox-csp.png)
 
-1. Open a new tab in your browser and access the `clever bot` website so that your browser can load and send the required cookies.
+1. Open a new tab in your browser and access the `clever bot` website so that your browser can load the required cookies.
 
-1. Inject all the code from [jsquadbot.min.mjs](./jsquadbot.min.mjs) into the webpage. There are several ways to do that. The most straightforward one is to just copy and paste it into the browser console. Another way is to use a browser extension that allows JS code to be injected automatically.
+1. Inject all the code from [jsquadbot.min.mjs](./src/jsquadbot.min.mjs) into the webpage. There are several ways to do that. The most straightforward one is to just copy and paste it into the browser console. Another way is to use a browser extension that allows JS code to be injected automatically.
 
-The injected code does nothing until it's actually called. See the examples below.
+The injected code does nothing until it's actually called from console. See the examples below.
 
 ### Examples
 

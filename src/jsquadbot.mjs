@@ -153,10 +153,10 @@ class ChatViewWhatsApp extends ChatView {
 
 	async switch() {
 		console.log('Switching to chat');
-		document.querySelector(`span._1wjpf._3NFp9._3FXB1[title*='${this.id}']`).dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
+		document.querySelector(`span._3ko75._5h6Y_._3Whw5[title*='${this.id}']`).dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, view: window}));
 		console.log('Waiting for page to load up');
 		await this.querySelector(`header span[title*='${this.id}']`, 1000);
-		await this.querySelector('._3dGYA', 1000, (timeElapsed, currentElement) => ((timeElapsed >= 5000) || ['load earlier messages…', 'Carregar mensagens recentes'].includes(currentElement.title)));
+		await this.querySelector('._2J60S', 1000, (timeElapsed, currentElement) => ((timeElapsed >= 5000) || ['load earlier messages…', 'Carregar mensagens recentes'].includes(currentElement.title)));
 		console.log('Loaded');
 	}
 
@@ -165,7 +165,7 @@ class ChatViewWhatsApp extends ChatView {
 		let data = msgDiv.dataset.prePlainText;
 		if (!data) throw 'Tried to create a MessageViewModel with a wrong DIV';
 		if (msgDiv.querySelector('img')) throw 'Tried to parse a message with an emoji';
-		if (msgDiv.querySelector('._3CVlE')) throw 'Tried to parse a reply message';
+		if (msgDiv.querySelector('._3AFCK')) throw 'Tried to parse a reply message';
 
 		const author = data.substr(0, data.length - 2).split('] ')[1];
 		const text = [...msgDiv.firstChild.firstChild.firstChild.childNodes].reduce((finalText, element) => {
@@ -197,7 +197,7 @@ class ChatViewWhatsApp extends ChatView {
 		input.textContent = msg;
 		input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, view: window}));
 		console.log('Clicking send button');
-		(await this.querySelector('button._35EW6', 1000)).click();
+		(await this.querySelector('button._1U1xa', 1000)).click();
 	}
 
 	async getMessages() {
@@ -206,12 +206,12 @@ class ChatViewWhatsApp extends ChatView {
 		return new MessagesViewModel(...[...await this.querySelectorAll('div[data-pre-plain-text]', 2000, (timeElapsed, messageDivs, previousMessageDivs) => {
 			console.log('Waiting for messages to load up');
 			return ((timeElapsed >= 6000) || (previousMessageDivs.length && (previousMessageDivs.length == messageDivs.length))) ? (console.log('Loaded'), messageDivs) : false;
-		})].reduce((result, messageDiv) => (!messageDiv.querySelector('._3CVlE') && !messageDiv.querySelector('img')) ? result.concat(this.parseMessage(messageDiv)) : result, [])
+		})].reduce((result, messageDiv) => (!messageDiv.querySelector('._3AFCK') && !messageDiv.querySelector('img')) ? result.concat(this.parseMessage(messageDiv)) : result, [])
 		);
 	}
 
 	static getAllChatsTitles() {
-		return [...document.querySelectorAll('._19RFN[title]')].map(span => span.title);
+		return [...document.querySelectorAll('._3ko75._5h6Y_._3Whw5[title]')].map(span => span.title);
 	}
 }
 
